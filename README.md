@@ -6,9 +6,9 @@ docker build for AWS EKS, it can be used as normal kubectl tool as well
 
 - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) (eks versions)
 - [helm](https://github.com/helm/helm) (latest release: https://github.com/helm/helm/releases/latest)
-- aws-iam-authenticator (latest version when run the build)
-- eskctl (latest version when run the build)
-- awscli (latest version when run the build)
+- [aws-iam-authenticator](https://github.com/kubernetes-sigs/aws-iam-authenticator) (latest version when run the build)
+- [eksctl](https://github.com/weaveworks/eksctl) (latest version when run the build)
+- [awscli](https://github.com/aws/aws-cli) (latest version when run the build)
 
 ## NOTES
 

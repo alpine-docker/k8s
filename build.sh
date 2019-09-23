@@ -10,7 +10,7 @@
 
 build() {
 
-  helm=$(curl -sL https://github.com/helm/helm/releases/latest)
+  helm=$(curl -s https://github.com/helm/helm/releases/latest)
   helm=$(echo $helm\" |grep -oP '(?<=tag\/v)[0-9][^"]*')
   echo $helm
 

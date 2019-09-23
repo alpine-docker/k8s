@@ -1,12 +1,12 @@
-# iubernetes tools for EKS
+# Kubernetes tools for EKS
 
 docker build for AWS EKS, it can be used as normal kubectl tool as well
 
 ### Installed tools
 
-- kubectl (eks versions)
+- [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) (eks versions)
+- [helm](https://github.com/helm/helm) (latest release: https://github.com/helm/helm/releases/latest)
 - aws-iam-authenticator (latest version when run the build)
-- helm (latest release: https://github.com/helm/helm/releases/latest)
 - eskctl (latest version when run the build)
 - awscli (latest version when run the build)
 

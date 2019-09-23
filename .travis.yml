@@ -5,3 +5,9 @@ services:
 
 script:
   - bash ./build.sh
+
+env:
+  - tag=1.14.6
+  - tag=1.13.10
+  - tag=1.12.10
+  - tag=1.11.10

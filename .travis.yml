@@ -4,7 +4,7 @@ services:
   - docker
 
 script:
-  - bash ./build.sh
+  - bash -x ./build.sh
 
 env:
   - tag=1.14.6

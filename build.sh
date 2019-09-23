@@ -19,7 +19,8 @@ build() {
 
   # run test
   version=$(docker run -ti --rm ${image}:${tag} helm version --client)
-  #Client: &version.Version{SemVer:"v2.9.0-rc2", GitCommit:"08db2d0181f4ce394513c32ba1aee7ffc6bc3326", GitTreeState:"clean"}
+  echo $version
+  # Client: &version.Version{SemVer:"v2.9.0-rc2", GitCommit:"08db2d0181f4ce394513c32ba1aee7ffc6bc3326", GitTreeState:"clean"}
   if [[ "${version}" == *"Error: unknown flag: --client"* ]]; then
     echo "Detected Helm3+"
     version=$(docker run -ti --rm ${image}:${tag} helm version)

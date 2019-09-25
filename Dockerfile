@@ -36,6 +36,8 @@ RUN curl --silent --location "https://github.com/weaveworks/eksctl/releases/down
     chmod +x /usr/bin/eksctl
 
 # Install awscli
-RUN apk add --update --no-cache aws-cli
+RUN apk add --update --no-cache python3 && \
+    pip3 install --upgrade pip && \
+    pip3 install awscli
 
 WORKDIR /apps

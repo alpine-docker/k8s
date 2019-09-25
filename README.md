@@ -9,6 +9,7 @@ docker build for AWS EKS, it can be used as normal kubectl tool as well
 - [aws-iam-authenticator](https://github.com/kubernetes-sigs/aws-iam-authenticator) (latest version when run the build)
 - [eksctl](https://github.com/weaveworks/eksctl) (latest version when run the build)
 - [awscli](https://github.com/aws/aws-cli) (latest version when run the build)
+- General tools, such as bash, curl
 
 ### Github Repo
 

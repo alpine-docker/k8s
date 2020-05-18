@@ -4,6 +4,8 @@ FROM alpine:edge
 # docker build --no-cache --build-arg KUBECTL_VERSION=${tag} --build-arg HELM_VERSION=${helm} -t ${image}:${tag} .
 ARG HELM_VERSION=3.2.1
 ARG KUBECTL_VERSION=1.17.5
+
+# https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html
 ARG AWS_IAM_AUTH_VERSION=1.16.8
 
 # Install helm (latest release)

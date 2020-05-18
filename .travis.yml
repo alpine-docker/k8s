@@ -1,3 +1,5 @@
+# https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html
+
 sudo: required
 
 services:
@@ -7,7 +9,7 @@ script:
   - bash ./build.sh
 
 env:
-  - tag=1.14.6
-  - tag=1.13.10
-  - tag=1.12.10
-  - tag=1.11.10
+  - tag=1.16.8
+  - tag=1.15.11
+  - tag=1.14.9
+  - tag=1.13.12

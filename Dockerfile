@@ -3,9 +3,9 @@ FROM alpine:edge
 # variable "VERSION" must be passed as docker environment variables during the image build
 # docker build --no-cache --build-arg VERSION=2.12.0 -t alpine/helm:2.12.0 .
 
-ARG HELM_VERSION=2.14.3
-ARG KUBECTL_VERSION=1.13.10
-ARG AWS_IAM_AUTH_VERSION=0.4.0
+ARG HELM_VERSION=3.2.1
+ARG KUBECTL_VERSION=1.17.5
+ARG AWS_IAM_AUTH_VERSION=1.16.8
 
 # Install helm (latest release)
 # ENV BASE_URL="https://storage.googleapis.com/kubernetes-helm"
@@ -26,8 +26,8 @@ RUN apk add --update --no-cache curl && \
     chmod +x /usr/bin/kubectl
 
 # Install aws-iam-authenticator (latest version)
-RUN curl -LO https://github.com/kubernetes-sigs/aws-iam-authenticator/releases/download/v${AWS_IAM_AUTH_VERSION}/aws-iam-authenticator_0.4.0_linux_amd64 && \
-    mv aws-iam-authenticator_0.4.0_linux_amd64 /usr/bin/aws-iam-authenticator && \
+RUN curl -LO https://amazon-eks.s3.us-west-2.amazonaws.com/${AWS_IAM_AUTH_VERSION}/2020-04-16/bin/linux/amd64/aws-iam-authenticator && \
+    mv aws-iam-authenticator /usr/bin/aws-iam-authenticator && \
     chmod +x /usr/bin/aws-iam-authenticator
 
 # Install eksctl (latest version)
@@ -37,7 +37,11 @@ RUN curl --silent --location "https://github.com/weaveworks/eksctl/releases/down
 
 # Install awscli
 RUN apk add --update --no-cache python3 && \
+    python3 -m ensurepip && \
     pip3 install --upgrade pip && \
     pip3 install awscli
+
+# Install jq
+RUN apk add --update --no-cache jq
 
 WORKDIR /apps

@@ -6,7 +6,7 @@ ARG HELM_VERSION=3.2.1
 ARG KUBECTL_VERSION=1.17.5
 
 # https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html
-ARG AWS_IAM_AUTH_VERSION=1.16.8
+ARG AWS_IAM_AUTH_VERSION_URL
 
 # Install helm (latest release)
 # ENV BASE_URL="https://storage.googleapis.com/kubernetes-helm"
@@ -27,7 +27,7 @@ RUN apk add --update --no-cache curl && \
     chmod +x /usr/bin/kubectl
 
 # Install aws-iam-authenticator (latest version)
-RUN curl -LO https://amazon-eks.s3.us-west-2.amazonaws.com/${AWS_IAM_AUTH_VERSION}/2020-04-16/bin/linux/amd64/aws-iam-authenticator && \
+RUN curl -LO ${AWS_IAM_AUTH_VERSION_URL} && \
     mv aws-iam-authenticator /usr/bin/aws-iam-authenticator && \
     chmod +x /usr/bin/aws-iam-authenticator
 

@@ -50,6 +50,6 @@ image="alpine/k8s"
 
 status=$(curl -sL https://hub.docker.com/v2/repositories/${image}/tags/${tag})
 echo $status
-if [[ "${status}" =~ "not found" ]]; then
+if [[ ( "${status}" =~ "not found" ) || ( ${REBUILD} == "true" ) ]]; then
    build
 fi

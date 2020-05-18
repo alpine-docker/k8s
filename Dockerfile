@@ -3,6 +3,7 @@ FROM alpine:edge
 # variable "VERSION" must be passed as docker environment variables during the image build
 # docker build --no-cache --build-arg VERSION=2.12.0 -t alpine/helm:2.12.0 .
 
+# Ignore to update version here, it is controlled by .travis.yml and build.sh
 ARG HELM_VERSION=3.2.1
 ARG KUBECTL_VERSION=1.17.5
 ARG AWS_IAM_AUTH_VERSION=1.16.8

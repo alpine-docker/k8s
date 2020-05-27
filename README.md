@@ -26,3 +26,14 @@ https://hub.docker.com/r/alpine/k8s/tags/
 # Why we need it
 
 Mostly it is used during CI/CD (continuous integration and continuous delivery) or as part of an automated build/deployment
+
+# Involve with developing and testing
+
+If you want to build these images by yourself, please follow below commands.
+
+```
+export tag=1.13.12
+
+bash ./build.sh
+```
+Then you need adjust the tag to other kubernetes version and run the build script again.

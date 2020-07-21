@@ -1,4 +1,4 @@
-FROM alpine:edge
+FROM alpine
 
 # Ignore to update version here, it is controlled by .travis.yml and build.sh
 # docker build --no-cache --build-arg KUBECTL_VERSION=${tag} --build-arg HELM_VERSION=${helm} -t ${image}:${tag} .
@@ -12,7 +12,7 @@ ARG AWS_IAM_AUTH_VERSION_URL
 # ENV BASE_URL="https://storage.googleapis.com/kubernetes-helm"
 ENV BASE_URL="https://get.helm.sh"
 ENV TAR_FILE="helm-v${HELM_VERSION}-linux-amd64.tar.gz"
-RUN apk add --update --no-cache curl ca-certificates bash && \
+RUN apk add --update --no-cache curl ca-certificates bash git && \
     curl -L ${BASE_URL}/${TAR_FILE} |tar xvz && \
     mv linux-amd64/helm /usr/bin/helm && \
     chmod +x /usr/bin/helm && \

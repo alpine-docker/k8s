@@ -11,8 +11,8 @@
 build() {
 
   # helm latest
-  helm=$(curl -s https://github.com/helm/helm/releases/latest)
-  helm=$(echo $helm\" |grep -oP '(?<=tag\/v)[0-9][^"]*')
+  helm=$(curl -s https://github.com/helm/helm/releases)
+  helm=$(echo $helm\" |grep -oP '(?<=tag\/v)[0-9][^"]*'|grep -v \-|sort -Vr|head -1)
   echo $helm
 
   # aws-iam-authenticator latest

@@ -18,6 +18,7 @@ build() {
   # aws-iam-authenticator latest
   iam_auth=$(curl -s https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html|grep iam-auth |grep linux|head -1)
   iam_auth_url=$(echo ${iam_auth} |grep -oP '(?<=curl -o aws-iam-authenticator )[^<]*'|head -1)
+  iam_auth_url="${iam_auth_url}amd64/aws-iam-authenticator"
   echo ${iam_auth_url}
 
   echo "Found new version, building the image ${image}:${tag}"

@@ -15,14 +15,7 @@ build() {
   helm=$(echo $helm\" |grep -oP '(?<=tag\/v)[0-9][^"]*'|grep -v \-|sort -Vr|head -1)
   echo $helm
 
-  # aws-iam-authenticator latest
-  iam_auth=$(curl -s https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html|grep iam-auth |grep linux|head -1)
-  iam_auth_url=$(echo ${iam_auth} |grep -oP '(?<=curl -o aws-iam-authenticator )[^<]*'|head -1)
-  iam_auth_url="${iam_auth_url}amd64/aws-iam-authenticator"
-  echo ${iam_auth_url}
-
-  echo "Found new version, building the image ${image}:${tag}"
-  docker build --no-cache --build-arg KUBECTL_VERSION=${tag} --build-arg HELM_VERSION=${helm} --build-arg AWS_IAM_AUTH_VERSION_URL="${iam_auth_url}" -t ${image}:${tag} .
+  docker build --no-cache --build-arg KUBECTL_VERSION=${tag} --build-arg HELM_VERSION=${helm} -t ${image}:${tag} .
 
   # run test
   version=$(docker run -ti --rm ${image}:${tag} helm version --client)

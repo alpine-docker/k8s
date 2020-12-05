@@ -30,6 +30,10 @@ https://hub.docker.com/r/alpine/k8s/tags/
 
 Mostly it is used during CI/CD (continuous integration and continuous delivery) or as part of an automated build/deployment
 
+# Latest vesion
+
+You should check in file [.travis.yml], it lists the image tags.
+
 # Involve with developing and testing
 
 If you want to build these images by yourself, please follow below commands.

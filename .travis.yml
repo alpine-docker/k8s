@@ -9,9 +9,8 @@ script:
   - bash ./build.sh
 
 env:
-  - tag=1.18.2
-  - tag=1.17.5
-  - tag=1.16.8
-  - tag=1.15.11
+  - tag=1.18.9
+  - tag=1.17.12
+  - tag=1.16.15
+  - tag=1.15.12
   - tag=1.14.9
-  - tag=1.13.12

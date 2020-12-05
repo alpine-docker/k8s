@@ -15,7 +15,12 @@ build() {
   helm=$(echo $helm\" |grep -oP '(?<=tag\/v)[0-9][^"]*'|grep -v \-|sort -Vr|head -1)
   echo $helm
 
-  docker build --no-cache --build-arg KUBECTL_VERSION=${tag} --build-arg HELM_VERSION=${helm} -t ${image}:${tag} .
+  # kustomize latest
+  kustomize_release_url=$(curl -vsIo /dev/null https://github.com/kubernetes-sigs/kustomize/releases/latest 2>&1 | grep 'location:' | cut -d ' ' -f 3)
+  kustomize_version=$(basename "$kustomize_release_url")
+  echo $kustomize_version
+
+  docker build --no-cache --build-arg KUBECTL_VERSION=${tag} --build-arg HELM_VERSION=${helm} --build-arg KUSTOMIZE_VERSION=${kustomize_version} -t ${image}:${tag} .
 
   # run test
   version=$(docker run -ti --rm ${image}:${tag} helm version --client)

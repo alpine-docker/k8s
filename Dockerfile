@@ -24,6 +24,9 @@ RUN apk add --update --no-cache curl ca-certificates bash git && \
 # add helm-diff
 RUN helm plugin install https://github.com/databus23/helm-diff
 
+# add helm-unittest
+RUN helm plugin install https://github.com/quintush/helm-unittest
+
 # Install kubectl (same version of aws esk)
 RUN apk add --update --no-cache curl && \
     curl -LO https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl && \

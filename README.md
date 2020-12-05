@@ -32,7 +32,7 @@ Mostly it is used during CI/CD (continuous integration and continuous delivery) 
 
 # Latest vesion
 
-You should check in file [.travis.yml], it lists the image tags.
+You should check in file [.travis.yml](.travis.yml), it lists the image tags.
 
 # Involve with developing and testing
 

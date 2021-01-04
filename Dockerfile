@@ -7,6 +7,10 @@ ARG HELM_VERSION=3.4.2
 ARG KUBECTL_VERSION=1.20.0
 ARG AWS_IAM_AUTH_VERSION=0.5.2
 
+# Install awscli and git
+RUN apk add --update --no-cache py3-pip git && \
+    pip3 install --upgrade pip && \
+    pip3 install awscli
 
 # Install helm (latest release)
 # ENV BASE_URL="https://storage.googleapis.com/kubernetes-helm"
@@ -16,6 +20,7 @@ RUN apk add --update --no-cache curl ca-certificates bash && \
     curl -L ${BASE_URL}/${TAR_FILE} |tar xvz && \
     mv linux-amd64/helm /usr/bin/helm && \
     chmod +x /usr/bin/helm && \
+    helm plugin install https://github.com/hypnoglow/helm-s3.git && \
     rm -rf linux-amd64 && \
     apk del curl && \
     rm -f /var/cache/apk/*
@@ -31,9 +36,5 @@ RUN curl -LO https://github.com/kubernetes-sigs/aws-iam-authenticator/releases/d
     mv aws-iam-authenticator_${AWS_IAM_AUTH_VERSION}_linux_amd64 /usr/bin/aws-iam-authenticator && \
     chmod +x /usr/bin/aws-iam-authenticator
 
-# Install awscli
-RUN apk add --update --no-cache py3-pip && \
-    pip3 install --upgrade pip && \
-    pip3 install awscli
 
 WORKDIR /apps

@@ -7,6 +7,8 @@ ARG HELM_VERSION=3.4.2
 ARG KUBECTL_VERSION=1.20.0
 ARG AWS_IAM_AUTH_VERSION=0.5.2
 
+ENV AWS_DEFAULT_REGION=eu-west-1
+
 # Install awscli and git
 RUN apk add --update --no-cache py3-pip git && \
     pip3 install --upgrade pip && \

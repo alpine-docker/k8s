@@ -19,7 +19,46 @@ docker build for AWS EKS, it can be used as normal kubectl tool as well
 - [eksctl](https://github.com/weaveworks/eksctl) (latest version when run the build)
 - [awscli](https://github.com/aws/aws-cli) (latest version when run the build)
 - General tools, such as bash, curl
+### Build
+```
+docker build -t aws-tools .
+```
+### Example Usage
+- Start container
+```
+docker run --name aws-tools -t -d aws-tools
+```
+- Start container and mount AWS credentials
+```
+docker run --name aws-tools -v "$HOME/.aws/credentials":/root/.aws/credentials:ro  -t -d aws-tools
+```
+- Start container and pass AWS credentials as environment variable
+```
+export AWS_ACCESS_KEY_ID=my key
+export AWS_SECRET_ACCESS_KEY=my sqcret
 
+docker run --name aws-tools \
+  -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+  -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+  -t -d aws-tools  
+```
+- Working directely on runnng container
+```
+docker run --name aws-tools -t -d aws-tools
+docker exec -it aws-tools bash 
+```
+- Get AWS version
+```
+docker exec -it aws-tools bash -c "aws --version"                                             
+aws-cli/2.1.19 Python/3.7.3 Linux/4.19.128-microsoft-standard exe/x86_64.alpine.3 prompt/off    
+```
+- Add remote cluster access to container
+
+```
+export EKS_CLUSTER_NAME=[my aws EKS clustername]
+docker exec -it eks-cluster bash -l \
+-c "rm  ~/.kube/config &&  aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region us-east-1 && kubectl get nodes"
+```
 ### Github Repo
 
 https://github.com/alpine-docker/k8s
@@ -35,3 +74,11 @@ https://hub.docker.com/r/alpine/k8s/tags/
 # Why we need it
 
 Mostly it is used during CI/CD (continuous integration and continuous delivery) or as part of an automated build/deployment
+
+This also useful when we want to start with desired tools immediately instead of installing all manually.
+
+Also act as wrapper:
+```
+docker exec -it aws-tools1 bash         
+[0.0.0.0] () root@6784ab43d24d ~
+```

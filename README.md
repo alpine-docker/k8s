@@ -56,7 +56,7 @@ aws-cli/2.1.19 Python/3.7.3 Linux/4.19.128-microsoft-standard exe/x86_64.alpine.
 
 ```
 export EKS_CLUSTER_NAME=[my aws EKS clustername]
-docker exec -it eks-cluster bash -l \
+docker exec -it aws-tools bash -l \
 -c "rm  ~/.kube/config &&  aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region us-east-1 && kubectl get nodes"
 ```
 ### Github Repo

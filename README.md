@@ -11,7 +11,8 @@ docker build for AWS EKS, it can be used as normal kubectl tool as well
 - [helm-unittest](https://github.com/quintush/helm-unittest) (latest commit)
 - [aws-iam-authenticator](https://github.com/kubernetes-sigs/aws-iam-authenticator) (latest version when run the build)
 - [eksctl](https://github.com/weaveworks/eksctl) (latest version when run the build)
-- [awscli](https://github.com/aws/aws-cli) (latest version when run the build)
+- [awscli v1](https://github.com/aws/aws-cli) (latest version when run the build) - See notes below
+- [awscli v2](https://github.com/aws/aws-cli) (latest version when run the build) - See notes below
 - General tools, such as bash, curl
 
 ### Github Repo
@@ -44,3 +45,16 @@ export tag=1.13.12
 bash ./build.sh
 ```
 Then you need adjust the tag to other kubernetes version and run the build script again.
+
+# Notes to set aws cli version when run the container
+
+```
+$ docker run -ti --rm -e awscli=v2 alpine/k8s:1.18.2 aws --version
+aws-cli/2.1.22 Python/3.7.3 Linux/4.19.121-linuxkit exe/x86_64.alpine.3 prompt/off
+
+$ docker run -ti --rm -e awscli=v1 alpine/k8s:1.18.2 aws --version
+aws-cli/1.18.223 Python/3.8.7 Linux/4.19.121-linuxkit botocore/1.19.63
+
+$ docker run -ti --rm alpine/k8s:1.18.2 aws --version
+aws-cli/1.18.223 Python/3.8.7 Linux/4.19.121-linuxkit botocore/1.19.63
+```

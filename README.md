@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/Gershon-A/k8s.svg?branch=master)](https://travis-ci.org/Gershon-A/k8s)
+![Docker Image Status](https://github.com/Gershon-A/k8s/actions/workflows/docker-publish.yml/badge.svg)
 # Kubernetes tools for EKS
 
 docker build for AWS EKS, it can be used as normal kubectl tool as well

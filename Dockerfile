@@ -3,7 +3,7 @@ ENV \
  COMPOSE_VERSION=1.25.0 \
  HELM_VERSION=3.5.2 \
  KUBECTL_VERSION=1.20.4 \
- ISTIO_VERSION=1.8.4 \
+ ISTIO_VERSION=1.8.3 \
  GLIBC_VER=2.31-r0
 
 ARG AWS_IAM_AUTH_VERSION_URL="https://amazon-eks.s3.us-west-2.amazonaws.com/1.16.8/2020-04-16/bin/linux/amd64/aws-iam-authenticator"

@@ -30,9 +30,9 @@ RUN curl -LO ${AWS_IAM_AUTH_VERSION_URL} && \
     chmod +x /usr/bin/aws-iam-authenticator
 
 # Install eksctl (latest version)
-RUN curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/latest_release/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp && \
-    mv /tmp/eksctl /usr/bin && \
-    chmod +x /usr/bin/eksctl
+RUN curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp && \
+    mv mv /tmp/eksctl /usr/local/bin && \
+    chmod +x /usr/local/bin/eksctl
 # Add eks to autocompletion
 RUN eksctl completion bash >> ~/.bash_completion . /etc/profile.d/bash_completion.sh . ~/.bash_completion
 

@@ -38,9 +38,9 @@ RUN curl --silent --location "https://github.com/weaveworks/eksctl/releases/late
 RUN eksctl completion bash >> ~/.bash_completion . /etc/profile.d/bash_completion.sh . ~/.bash_completion
 
 # Install SMALL STEP cli 
-RUN curl -LO   https://github.com/smallstep/certificates/releases/download/v{$SMALLSTEP_VERSION}/step-certificates_linux_{$SMALLSTEP_VERSION}_amd64.tar.gz && \
-tar -xf step-certificates_linux_{$SMALLSTEP_VERSION}_amd64.tar.gz -C /tmp && \
-mv /tmp/step-certificates_{$SMALLSTEP_VERSION}/bin/step-ca /usr/bin && \
+RUN curl -LO   https://github.com/smallstep/certificates/releases/download/v${SMALLSTEP_VERSION}/step-certificates_linux_${SMALLSTEP_VERSION}_amd64.tar.gz && \
+tar -xf step-certificates_linux_${SMALLSTEP_VERSION}_amd64.tar.gz -C /tmp && \
+mv /tmp/step-certificates_${SMALLSTEP_VERSION}/bin/step-ca /usr/bin && \
 chmod +x /usr/bin/step-ca
 
 # Install awscli

@@ -4,7 +4,8 @@ ENV \
  HELM_VERSION=3.5.2 \
  KUBECTL_VERSION=1.20.4 \
  ISTIO_VERSION=1.8.3 \
- GLIBC_VER=2.31-r0
+ GLIBC_VER=2.31-r0 \
+ SMALLSTEP_VERSION=0.15.8
 
 ARG AWS_IAM_AUTH_VERSION_URL="https://amazon-eks.s3.us-west-2.amazonaws.com/1.16.8/2020-04-16/bin/linux/amd64/aws-iam-authenticator"
 ## Alpine base ##
@@ -35,6 +36,12 @@ RUN curl --silent --location "https://github.com/weaveworks/eksctl/releases/late
     chmod +x /usr/local/bin/eksctl
 # Add eks to autocompletion
 RUN eksctl completion bash >> ~/.bash_completion . /etc/profile.d/bash_completion.sh . ~/.bash_completion
+
+# Install SMALL STEP cli 
+RUN curl -LO   https://github.com/smallstep/certificates/releases/download/v{$SMALLSTEP_VERSION}/step-certificates_linux_{$SMALLSTEP_VERSION}_amd64.tar.gz && \
+tar -xf step-certificates_linux_{$SMALLSTEP_VERSION}_amd64.tar.gz -C /tmp && \
+mv /tmp/step-certificates_{$SMALLSTEP_VERSION}/bin/step-ca /usr/bin && \
+chmod +x /usr/bin/step-ca
 
 # Install awscli
 # install glibc compatibility for alpine

@@ -6,12 +6,20 @@ docker build for AWS EKS, it can be used as normal kubectl tool as well
 
 ### Installed tools
  COMPOSE_VERSION=1.25.0 
- HELM_VERSION=3.3.4 
+
+ HELM_VERSION=3.5.2
+
  KUBECTL_VERSION=1.18.8 
- ISTIO_VERSION=1.7.4 
- AWS-CLI=2.1.1 
+
+ ISTIO_VERSION=1.8.3
+
+ AWS-CLI=2.1.30 (14-03-2021)
+
  PYTHON=3.7.3
+
  GLIBC_VER=2.31-r0
+
+ SMALLSTEP_VERSION=0.15.8
  
 ### For latest see: 
 - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) (eks versions: https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html)
@@ -19,6 +27,7 @@ docker build for AWS EKS, it can be used as normal kubectl tool as well
 - [aws-iam-authenticator](https://github.com/kubernetes-sigs/aws-iam-authenticator) (latest version when run the build)
 - [eksctl](https://github.com/weaveworks/eksctl) (latest version when run the build)
 - [awscli](https://github.com/aws/aws-cli) (latest version when run the build)
+- [smallstep/certificates] (https://github.com/smallstep/certificates) 0.15.8
 - General tools, such as bash, curl
 ### Build
 ```

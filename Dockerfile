@@ -1,17 +1,36 @@
-FROM alpine
+FROM ubuntu:18.04
+
 ENV \
  COMPOSE_VERSION=1.25.0 \
  HELM_VERSION=3.5.2 \
  KUBECTL_VERSION=1.20.4 \
  ISTIO_VERSION=1.8.3 \
  GLIBC_VER=2.31-r0 \
- SMALLSTEP_VERSION=0.15.8
+ SMALLSTEP_VERSION=0.15.8 \
+ KUBECTL_CERT_MANAGER=1.1.1
+
+USER root
+WORKDIR /root
+
+# Alpine Linux default shell for root is '/bin/ash'
+# Change this to '/bin/bash' so that  '/etc/bashrc'
+# can be loaded when entering the running container
+# RUN sed -i 's,/bin/ash,/bin/bash,g' /etc/passwd
+
+# Must set this value for the bash shell to source 
+# the '/etc/bashrc' file.
+# See: https://stackoverflow.com/q/29021704
+# ENV BASH_ENV /etc/bashrc
 
 ARG AWS_IAM_AUTH_VERSION_URL="https://amazon-eks.s3.us-west-2.amazonaws.com/1.16.8/2020-04-16/bin/linux/amd64/aws-iam-authenticator"
 ## Alpine base ##
 ENV COMPLETIONS=/usr/share/bash-completion/completions
-RUN apk add --update bash bash-completion curl git jq libintl ncurses tmux ca-certificates groff less  openssl
-RUN sed -i s,/bin/ash,/bin/bash, /etc/passwd
+RUN apt-get update && apt-get install vim bash bash-completion curl git jq tmux ca-certificates groff less  openssl unzip wget -y \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean \
+    && apt-get autoremove --yes \
+    && rm -rf /var/lib/{apt,dpkg,cache,log}/
+
 
 ## Install a bunch of binaries
 RUN curl -L -o /usr/local/bin/docker-compose https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-Linux-x86_64 \
@@ -40,68 +59,45 @@ RUN eksctl completion bash >> ~/.bash_completion . /etc/profile.d/bash_completio
 # Install SMALL STEP cli 
 RUN curl -LO   https://github.com/smallstep/certificates/releases/download/v${SMALLSTEP_VERSION}/step-certificates_linux_${SMALLSTEP_VERSION}_amd64.tar.gz && \
 tar -xf step-certificates_linux_${SMALLSTEP_VERSION}_amd64.tar.gz -C /tmp && \
-mv /tmp/step-certificates_${SMALLSTEP_VERSION}/bin/step-ca /usr/bin && \
-chmod +x /usr/bin/step-ca
+mv /tmp/step-certificates_${SMALLSTEP_VERSION}/bin/step-ca /usr/local/bin && \
+chmod +x /usr/local/bin/step-ca && \
+rm step-certificates_linux_${SMALLSTEP_VERSION}_amd64.tar.gz
 
 # Install awscli
-# install glibc compatibility for alpine
-RUN apk add \
-        binutils \
-    && curl -sL https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub -o /etc/apk/keys/sgerrand.rsa.pub \
-    && curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VER}/glibc-${GLIBC_VER}.apk \
-    && curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VER}/glibc-bin-${GLIBC_VER}.apk \
-    && apk add --no-cache \
-        glibc-${GLIBC_VER}.apk \
-        glibc-bin-${GLIBC_VER}.apk \
-    && curl -sL https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip \
-    && unzip awscliv2.zip \
-    && aws/install \
-  ##  && complete -C '/root/aws/dist/aws_completer' aws \
-    && rm -rf \
-        awscliv2.zip \
-        aws \
-        /usr/local/aws-cli/v2/*/dist/aws_completer \
-        /usr/local/aws-cli/v2/*/dist/awscli/data/ac.index \
-        /usr/local/aws-cli/v2/*/dist/awscli/examples \
-    && rm glibc-${GLIBC_VER}.apk \
-    && rm glibc-bin-${GLIBC_VER}.apk \
-    && rm -rf /var/cache/apk/*
+# latest version of the AWS CLI
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
+    unzip awscliv2.zip && \
+   ./aws/install && \
+   rm awscliv2.zip && rm -fr ./aws
+# Add autocompletion for aws-cli
+RUN echo 'complete -C '/usr/local/bin/aws_completer' aws' >> /etc/profile
 
-RUN export PATH=/usr/bin/:$PATH
-
-
-    # Install Istio
+# Install Istio
 RUN curl -L "https://istio.io/downloadIstio" | ISTIO_VERSION=${ISTIO_VERSION} sh - && \
     cd istio-${ISTIO_VERSION} && \
     cp ./bin/istioctl /usr/local/bin/istioctl && \
     chmod +x /usr/local/bin/istioctl
 # Add autocompletion for ISTIO
-# RUN echo "[[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"" >>~/.bashrc
-# P.S collateral - is hidden command and missed from documentation
-RUN cp /istio-${ISTIO_VERSION}/tools/istioctl.bash $COMPLETIONS \
-| istioctl collateral completion --bash > $COMPLETIONS/istioctl.bash
-    # Install kubectl cert-manager plugin
-RUN curl -L -o kubectl-cert-manager.tar.gz "https://github.com/jetstack/cert-manager/releases/download/v1.0.0/kubectl-cert_manager-linux-amd64.tar.gz" && \
-    tar xzf kubectl-cert-manager.tar.gz && \
+RUN echo 'source ~/istio-${ISTIO_VERSION}/tools/istioctl.bash' >> /etc/profile
+
+# Install kubectl cert-manager plugin
+RUN curl -L -o kubectl-cert-manager.tar.gz "https://github.com/jetstack/cert-manager/releases/download/v$KUBECTL_CERT_MANAGER/kubectl-cert_manager-linux-amd64.tar.gz" && \
+    tar -xf kubectl-cert-manager.tar.gz && \
     mv kubectl-cert_manager /usr/local/bin
 
-RUN cd /tmp \
- && git clone https://github.com/ahmetb/kubectx \
- && cd kubectx \
- && mv kubectx /usr/local/bin/kctx \
- && mv kubens /usr/local/bin/kns \
- && mv completion/*.bash $COMPLETIONS \
- && cd .. \
- && rm -rf kubectx
-RUN cd /tmp \
- && git clone https://github.com/jonmosco/kube-ps1 \
- && cp kube-ps1/kube-ps1.sh /etc/profile.d/ \
- && rm -rf kube-ps1
+RUN wget https://raw.githubusercontent.com/ahmetb/kubectx/master/kubectx
+RUN wget https://raw.githubusercontent.com/ahmetb/kubectx/master/kubens
+RUN chmod +x kubectx kubens
+
+RUN mv kubens kubectx /usr/local/bin
 RUN kubectl config set-context kubernetes --namespace=default \
  && kubectl config use-context kubernetes
-WORKDIR /root
+
+
 RUN echo trap exit TERM > /etc/profile.d/trapterm.sh
+RUN chmod +x /etc/profile.d/trapterm.sh 
 RUN sed -i "s/export PS1=/#export PS1=/" /etc/profile
+
 
 ENV \
  HOSTIP="0.0.0.0" \
@@ -111,4 +107,9 @@ ENV \
  KUBE_PS1_CTX_COLOR="green" \
  KUBE_PS1_NS_COLOR="green" \
  PS1="\e[1m\e[31m[\$HOSTIP] \e[32m(\$(kube_ps1)) \e[34m\u@\h\e[35m \w\e[0m\n$ "
-ENTRYPOINT ["bash", "-i"]
+#ENTRYPOINT ["bash", "-i"]
+#RUN echo '\
+#        . /etc/profile ; \
+#   ' >> /root/.profile
+
+CMD [ "bash", "-l"]

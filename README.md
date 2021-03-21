@@ -24,6 +24,12 @@ Most autocompletion installed.
  
  KUBECTL-CERT_MANAGER=1.1.1
 
+ kubectx = master
+ 
+ kubens = master
+
+ kube-ps1 = master
+
 ### For latest see: 
 - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) (eks versions: https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html)
 - [helm](https://github.com/helm/helm) (latest release: https://github.com/helm/helm/releases/latest)
@@ -32,6 +38,8 @@ Most autocompletion installed.
 - [awscli](https://github.com/aws/aws-cli) (latest version when run the build)
 - [smallstep/certificates] (https://github.com/smallstep/certificates) 0.15.8
 - [cert-manager] (https://github.com/jetstack/cert-manager) 1.1.1
+- [kubectx-and-kubens] (https://github.com/ahmetb/kubectx/blob/master/kubens) master
+- [kube-ps1] (https://github.com/jonmosco/kube-ps1) master
 - General tools, such as bash, curl
 ### Build
 ```

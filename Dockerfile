@@ -22,10 +22,10 @@ RUN apk add --update --no-cache curl ca-certificates bash git && \
     rm -f /var/cache/apk/*
 
 # add helm-diff
-RUN helm plugin install https://github.com/databus23/helm-diff
+RUN helm plugin install https://github.com/databus23/helm-diff && rm -rf /tmp/helm-*
 
 # add helm-unittest
-RUN helm plugin install https://github.com/quintush/helm-unittest
+RUN helm plugin install https://github.com/quintush/helm-unittest && rm -rf /tmp/helm-*
 
 # Install kubectl (same version of aws esk)
 RUN apk add --update --no-cache curl && \
@@ -53,7 +53,8 @@ RUN curl --silent --location "https://github.com/weaveworks/eksctl/releases/down
 RUN apk add --update --no-cache python3 && \
     python3 -m ensurepip && \
     pip3 install --upgrade pip && \
-    pip3 install awscli
+    pip3 install awscli && \
+    pip3 cache purge
 
 # Install jq
 RUN apk add --update --no-cache jq

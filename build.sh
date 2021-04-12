@@ -17,7 +17,7 @@ build() {
 
   # jq
   DEBIAN_FRONTEND=noninteractive
-  apt-get update && apt-get -q -y install jq
+  sudo apt-get update && sudo apt-get -q -y install jq
 
   # kustomize latest
   kustomize_release=$(curl -s https://api.github.com/repos/kubernetes-sigs/kustomize/releases | /usr/bin/jq -r '.[].tag_name | select(contains("kustomize"))' \

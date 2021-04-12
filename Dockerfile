@@ -5,6 +5,7 @@ FROM alpine
 ARG HELM_VERSION=3.2.1
 ARG KUBECTL_VERSION=1.17.5
 ARG KUSTOMIZE_VERSION=v3.8.1
+ARG KUBESEAL_VERSION=v0.15.0
 
 # https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html
 ARG AWS_IAM_AUTH_VERSION_URL=https://amazon-eks.s3.us-west-2.amazonaws.com/1.17.9/2020-08-04/bin/linux/amd64/aws-iam-authenticator
@@ -57,5 +58,10 @@ RUN apk add --update --no-cache python3 && \
 
 # Install jq
 RUN apk add --update --no-cache jq
+
+# Install kubeseal
+RUN curl -sL https://github.com/bitnami-labs/sealed-secrets/releases/download/${KUBESEAL_VERSION}/kubeseal-linux-amd64 -o kubeseal && \
+    mv kubeseal /usr/bin/kubeseal && \
+    chmod +x /usr/bin/kubeseal
 
 WORKDIR /apps

@@ -15,6 +15,10 @@ build() {
   helm=$(echo $helm\" |grep -oP '(?<=tag\/v)[0-9][^"]*'|grep -v \-|sort -Vr|head -1)
   echo $helm
 
+  # jq
+  DEBIAN_FRONTEND=noninteractive
+  apt-get update && apt-get -q -y install jq
+
   # kustomize latest
   kustomize_release=$(curl -s https://api.github.com/repos/kubernetes-sigs/kustomize/releases | /usr/bin/jq -r '.[].tag_name | select(contains("kustomize"))' \
     | sort -rV | head -n 1)

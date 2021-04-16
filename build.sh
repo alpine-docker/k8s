@@ -8,6 +8,8 @@
 
 # set -ex
 
+set -e
+
 build() {
 
   # helm latest

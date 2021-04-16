@@ -25,7 +25,13 @@ build() {
   kustomize_version=$(basename ${kustomize_release})
   echo $kustomize_version
 
-  docker build --no-cache --build-arg KUBECTL_VERSION=${tag} --build-arg HELM_VERSION=${helm} --build-arg KUSTOMIZE_VERSION=${kustomize_version} -t ${image}:${tag} .
+  # kubeseal latest
+  kubeseal_version=$(curl -s https://api.github.com/repos/bitnami-labs/sealed-secrets/releases | /usr/bin/jq -r '.[].tag_name | select(startswith("v"))' \
+    | sort -rV | head -n 1)
+  echo $kubeseal_version
+
+  docker build --no-cache --build-arg KUBECTL_VERSION=${tag} --build-arg HELM_VERSION=${helm} --build-arg KUSTOMIZE_VERSION=${kustomize_version} \
+    --build-arg KUBESEAL_VERSION=${kubeseal_version} -t ${image}:${tag} .
 
   # run test
   version=$(docker run -ti --rm ${image}:${tag} helm version --client)

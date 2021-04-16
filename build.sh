@@ -13,7 +13,7 @@ build() {
   # helm latest
   helm=$(curl -s https://github.com/helm/helm/releases)
   helm=$(echo $helm\" |grep -oP '(?<=tag\/v)[0-9][^"]*'|grep -v \-|sort -Vr|head -1)
-  echo $helm
+  echo "helm version is $helm"
 
   # jq
   DEBIAN_FRONTEND=noninteractive
@@ -23,15 +23,19 @@ build() {
   kustomize_release=$(curl -s https://api.github.com/repos/kubernetes-sigs/kustomize/releases | /usr/bin/jq -r '.[].tag_name | select(contains("kustomize"))' \
     | sort -rV | head -n 1)
   kustomize_version=$(basename ${kustomize_release})
-  echo $kustomize_version
+  echo "kustomize version is $kustomize_version"
 
   # kubeseal latest
   kubeseal_version=$(curl -s https://api.github.com/repos/bitnami-labs/sealed-secrets/releases | /usr/bin/jq -r '.[].tag_name | select(startswith("v"))' \
     | sort -rV | head -n 1)
-  echo $kubeseal_version
+  echo "kubeseal version is $kubeseal_version"
 
-  docker build --no-cache --build-arg KUBECTL_VERSION=${tag} --build-arg HELM_VERSION=${helm} --build-arg KUSTOMIZE_VERSION=${kustomize_version} \
-    --build-arg KUBESEAL_VERSION=${kubeseal_version} -t ${image}:${tag} .
+  docker build --no-cache \
+    --build-arg KUBECTL_VERSION=${tag} \
+    --build-arg HELM_VERSION=${helm} \
+    --build-arg KUSTOMIZE_VERSION=${kustomize_version} \
+    --build-arg KUBESEAL_VERSION=${kubeseal_version} \
+    -t ${image}:${tag} .
 
   # run test
   version=$(docker run -ti --rm ${image}:${tag} helm version --client)

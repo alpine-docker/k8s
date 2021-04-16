@@ -31,9 +31,9 @@ https://hub.docker.com/r/alpine/k8s/tags/
 
 Mostly it is used during CI/CD (continuous integration and continuous delivery) or as part of an automated build/deployment
 
-# Latest vesion
+# kubectl versions
 
-You should check in file [.travis.yml](.travis.yml), it lists the image tags.
+You should check in file [.travis.yml](.travis.yml), it lists the kubectl version and used as image tags.
 
 # Involve with developing and testing
 

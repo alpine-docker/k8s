@@ -15,9 +15,14 @@ build() {
   helm=$(echo $helm\" |grep -oP '(?<=tag\/v)[0-9][^"]*'|grep -v \-|sort -Vr|head -1)
   echo $helm
 
+  # jq
+  DEBIAN_FRONTEND=noninteractive
+  sudo apt-get update && sudo apt-get -q -y install jq
+
   # kustomize latest
-  kustomize_release_url=$(curl -vsIo /dev/null https://github.com/kubernetes-sigs/kustomize/releases/latest 2>&1 | grep 'location:' | cut -d ' ' -f 3)
-  kustomize_version=$(basename "$kustomize_release_url")
+  kustomize_release=$(curl -s https://api.github.com/repos/kubernetes-sigs/kustomize/releases | /usr/bin/jq -r '.[].tag_name | select(contains("kustomize"))' \
+    | sort -rV | head -n 1)
+  kustomize_version=$(basename ${kustomize_release})
   echo $kustomize_version
 
   docker build --no-cache --build-arg KUBECTL_VERSION=${tag} --build-arg HELM_VERSION=${helm} --build-arg KUSTOMIZE_VERSION=${kustomize_version} -t ${image}:${tag} .

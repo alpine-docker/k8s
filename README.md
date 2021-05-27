@@ -1,6 +1,22 @@
 # Kubernetes tools for EKS
 
-docker build for AWS EKS, it can be used as normal kubectl tool as well
+kubernetes images with necessary tools for AWS EKS, it can be used as normal kubectl tool as well.
+
+### Preface
+
+[AWS EKS](https://aws.amazon.com/eks) maintains [special kubernetes versions](https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html) to its managed service. This repo and its built images are used to simplify the way on how easily you can deploy applicaitons with it
+
+Currently (on 28th May 2021), the support kubernetes versions are
+
+```
+1.20.4
+1.19.8
+1.18.16
+1.17.17
+1.16.15
+```
+
+If you need support new versions, after AWS EKS released, please raise PR to update the versions in [.travis.yml](.travis.yml)
 
 ### Installed tools
 

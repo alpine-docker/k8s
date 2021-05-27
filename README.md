@@ -37,7 +37,7 @@ https://github.com/alpine-docker/k8s
 
 ### Daily Travis CI build logs
 
-https://travis-ci.org/alpine-docker/k8s
+https://travis-ci.com/alpine-docker/k8s
 
 ### Docker image tags
 

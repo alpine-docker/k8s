@@ -1,3 +1,5 @@
+# After Travis CI adjusts their plan, we don't have enough free credit to run the build. So daily build has been adjusted to weekly. If you don't get latest version, please wait for one week.
+
 # Kubernetes tools for EKS
 
 kubernetes images with necessary tools for AWS EKS, it can be used as normal kubectl tool as well.

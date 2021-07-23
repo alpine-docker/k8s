@@ -8,9 +8,10 @@ kubernetes images with necessary tools for AWS EKS, it can be used as normal kub
 
 [AWS EKS](https://aws.amazon.com/eks) maintains [special kubernetes versions](https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html) to its managed service. This repo and its built images are used to simplify the way on how easily you can deploy applicaitons with it
 
-Currently (on 28th May 2021), the support kubernetes versions are
+Currently (on 23d July 2021), the support kubernetes versions are
 
 ```
+1.21.2
 1.20.4
 1.19.8
 1.18.16

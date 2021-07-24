@@ -1,5 +1,3 @@
-# After Travis CI adjusts their plan, we don't have enough free credit to run the build. So daily build has been adjusted to weekly. If you don't get latest version, please wait for one week.
-
 # Kubernetes tools for EKS
 
 kubernetes images with necessary tools for AWS EKS, it can be used as normal kubectl tool as well.
@@ -8,18 +6,7 @@ kubernetes images with necessary tools for AWS EKS, it can be used as normal kub
 
 [AWS EKS](https://aws.amazon.com/eks) maintains [special kubernetes versions](https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html) to its managed service. This repo and its built images are used to simplify the way on how easily you can deploy applicaitons with it
 
-Currently (on 23d July 2021), the support kubernetes versions are
-
-```
-1.21.2
-1.20.4
-1.19.8
-1.18.16
-1.17.17
-1.16.15
-```
-
-If you need support new versions, after AWS EKS released, please raise PR to update the versions in [.travis.yml](.travis.yml)
+There is no `latest` tag for this image
 
 ### Installed tools
 
@@ -38,9 +25,9 @@ If you need support new versions, after AWS EKS released, please raise PR to upd
 
 https://github.com/alpine-docker/k8s
 
-### Daily Travis CI build logs
+### build logs
 
-https://travis-ci.com/alpine-docker/k8s
+https://app.circleci.com/pipelines/github/alpine-docker/k8s
 
 ### Docker image tags
 
@@ -52,15 +39,17 @@ Mostly it is used during CI/CD (continuous integration and continuous delivery) 
 
 # kubectl versions
 
-You should check in file [.travis.yml](.travis.yml), it lists the kubectl version and used as image tags.
+You should check in [kubernetes versions](https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html), it lists the kubectl version and used as image tags.
 
 # Involve with developing and testing
 
 If you want to build these images by yourself, please follow below commands.
 
 ```
-export tag=1.13.12
-
+export REBUILD=true
 bash ./build.sh
 ```
-Then you need adjust the tag to other kubernetes version and run the build script again.
+
+### Weekly build
+
+Build job runs weekly

@@ -15,6 +15,7 @@ There is no `latest` tag for this image
 - [helm](https://github.com/helm/helm) (latest release: https://github.com/helm/helm/releases/latest)
 - [helm-diff](https://github.com/databus23/helm-diff) (latest commit)
 - [helm-unittest](https://github.com/quintush/helm-unittest) (latest commit)
+- [helm-push](https://github.com/chartmuseum/helm-push) (latest commit)
 - [aws-iam-authenticator](https://github.com/kubernetes-sigs/aws-iam-authenticator) (latest version when run the build)
 - [eksctl](https://github.com/weaveworks/eksctl) (latest version when run the build)
 - [awscli v1](https://github.com/aws/aws-cli) (latest version when run the build)

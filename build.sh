@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 
 # Prerequisite
-# Make sure you set secret enviroment variables in Travis CI
+# Make sure you set secret enviroment variables in CI
 # DOCKER_USERNAME
 # DOCKER_PASSWORD
-# API_TOKEN
 
 # set -ex
 
@@ -52,7 +51,7 @@ build() {
     exit
   fi
 
-  if [[ "$TRAVIS_BRANCH" == "master" && "$TRAVIS_PULL_REQUEST" == false ]]; then
+  if [[ "$CIRCLE_BRANCH" == "master" ]]; then
     docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
     docker push ${image}:${tag}
   fi

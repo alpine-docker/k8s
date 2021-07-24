@@ -58,7 +58,7 @@ build() {
 }
 
 image="alpine/k8s"
-curl -s https://raw.githubusercontent.com/awsdocs/amazon-eks-user-guide/master/doc_source/kubernetes-versions.md |egrep -A 10 "The following Kubernetes versions"|awk '/^+/{gsub("\\\\", ""); print $NF}' | while read tag
+curl -s https://raw.githubusercontent.com/awsdocs/amazon-eks-user-guide/master/doc_source/kubernetes-versions.md |egrep -A 10 "The following Kubernetes versions"|grep ^+ |awk '{gsub("\\\\", ""); print $NF}' |sort -Vr | while read tag
 do
   echo ${tag}
   status=$(curl -sL https://hub.docker.com/v2/repositories/${image}/tags/${tag})

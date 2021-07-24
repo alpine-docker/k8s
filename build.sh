@@ -16,9 +16,12 @@ build() {
   helm=$(echo $helm\" |grep -oP '(?<=tag\/v)[0-9][^"]*'|grep -v \-|sort -Vr|head -1)
   echo "helm version is $helm"
 
-  # jq
+  # jq 1.6
   DEBIAN_FRONTEND=noninteractive
-  sudo apt-get update && sudo apt-get -q -y install jq
+  #sudo apt-get update && sudo apt-get -q -y install jq
+  curl -s https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 -o jq
+  sudo mv jq /usr/bin/jq
+  sudo chmod +x /usr/bin/jq
 
   # kustomize latest
   kustomize_release=$(curl -s https://api.github.com/repos/kubernetes-sigs/kustomize/releases | /usr/bin/jq -r '.[].tag_name | select(contains("kustomize"))' \

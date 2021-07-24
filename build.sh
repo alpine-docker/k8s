@@ -40,14 +40,10 @@ build() {
     -t ${image}:${tag} .
 
   # run test
-  version=$(docker run -ti --rm ${image}:${tag} helm version --client)
-  echo $version
-  # Client: &version.Version{SemVer:"v2.9.0-rc2", GitCommit:"08db2d0181f4ce394513c32ba1aee7ffc6bc3326", GitTreeState:"clean"}
-  if [[ "${version}" == *"Error: unknown flag: --client"* ]]; then
-    echo "Detected Helm3+"
-    version=$(docker run -ti --rm ${image}:${tag} helm version)
-    #version.BuildInfo{Version:"v3.0.0-beta.2", GitCommit:"26c7338408f8db593f93cd7c963ad56f67f662d4", GitTreeState:"clean", GoVersion:"go1.12.9"}
-  fi
+  echo "Detected Helm3+"
+  version=$(docker run --rm ${image}:${tag} helm version)
+  # version.BuildInfo{Version:"v3.6.3", GitCommit:"d506314abfb5d21419df8c7e7e68012379db2354", GitTreeState:"clean", GoVersion:"go1.16.5"}
+
   version=$(echo ${version}| awk -F \" '{print $2}')
   if [ "${version}" == "v${helm}" ]; then
     echo "matched"
@@ -56,16 +52,19 @@ build() {
     exit
   fi
 
-if [[ "$TRAVIS_BRANCH" == "master" && "$TRAVIS_PULL_REQUEST" == false ]]; then
+  if [[ "$TRAVIS_BRANCH" == "master" && "$TRAVIS_PULL_REQUEST" == false ]]; then
     docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
     docker push ${image}:${tag}
   fi
 }
 
 image="alpine/k8s"
-
-status=$(curl -sL https://hub.docker.com/v2/repositories/${image}/tags/${tag})
-echo $status
-if [[ ( "${status}" =~ "not found" ) || ( ${REBUILD} == "true" ) ]]; then
-   build
-fi
+curl -s https://raw.githubusercontent.com/awsdocs/amazon-eks-user-guide/master/doc_source/kubernetes-versions.md |egrep -A 10 "The following Kubernetes versions"|awk '/^+/{gsub("\\\\", ""); print $NF}' | while read tag
+do
+  echo ${tag}
+  status=$(curl -sL https://hub.docker.com/v2/repositories/${image}/tags/${tag})
+  echo $status
+  if [[ ( "${status}" =~ "not found" ) || ( ${REBUILD} == "true" ) ]]; then
+     build
+  fi
+done

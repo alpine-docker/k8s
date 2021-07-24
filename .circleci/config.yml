@@ -1,0 +1,40 @@
+version: 2.1
+
+# Prerequisite
+# Make sure you set secret enviroment variables in CICD
+# DOCKER_USERNAME
+# DOCKER_PASSWORD
+# API_TOKEN
+
+jobs:
+  build:
+    machine: true
+    steps:
+      - checkout
+      - run: |
+          bash ./build.sh
+
+workflows:
+  build:
+    jobs:
+      - build:
+          name: build
+
+  nightly:
+    triggers:
+       - schedule:
+           cron: "0 2 * * *"
+           filters:
+             branches:
+               only:
+                 - master
+                 - main
+    jobs:
+      - build:
+          name: build
+          filters:
+            branches:
+              only:
+                - master
+                - main
+

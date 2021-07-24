@@ -7,9 +7,6 @@ ARG KUBECTL_VERSION=1.17.5
 ARG KUSTOMIZE_VERSION=v3.8.1
 ARG KUBESEAL_VERSION=v0.15.0
 
-# https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html
-ARG AWS_IAM_AUTH_VERSION_URL=https://amazon-eks.s3.us-west-2.amazonaws.com/1.17.9/2020-08-04/bin/linux/amd64/aws-iam-authenticator
-
 # Install helm (latest release)
 # ENV BASE_URL="https://storage.googleapis.com/kubernetes-helm"
 ENV BASE_URL="https://get.helm.sh"
@@ -37,11 +34,6 @@ RUN curl -sLO https://github.com/kubernetes-sigs/kustomize/releases/download/kus
     mv kustomize /usr/bin/kustomize && \
     chmod +x /usr/bin/kustomize
 
-# Install aws-iam-authenticator (latest version)
-RUN curl -sLO ${AWS_IAM_AUTH_VERSION_URL} && \
-    mv aws-iam-authenticator /usr/bin/aws-iam-authenticator && \
-    chmod +x /usr/bin/aws-iam-authenticator
-
 # Install eksctl (latest version)
 RUN curl -sL "https://github.com/weaveworks/eksctl/releases/download/latest_release/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp && \
     mv /tmp/eksctl /usr/bin && \
@@ -53,6 +45,12 @@ RUN apk add --update --no-cache python3 && \
     pip3 install --upgrade pip && \
     pip3 install awscli && \
     pip3 cache purge
+
+# https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html
+# Install aws-iam-authenticator
+RUN authenticator=$(aws --no-sign-request s3 ls s3://amazon-eks --recursive |grep aws-iam-authenticator$|grep amd64 |awk '{print $NF}' |sort -V|tail -1) && \
+    aws --no-sign-request s3 cp s3://amazon-eks/${authenticator} /usr/bin/aws-iam-authenticator && \
+    chmod +x /usr/bin/aws-iam-authenticator
 
 # Install jq
 RUN apk add --update --no-cache jq

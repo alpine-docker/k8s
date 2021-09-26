@@ -58,6 +58,9 @@ RUN authenticator=$(aws --no-sign-request s3 ls s3://amazon-eks --recursive |gre
 # Install jq
 RUN apk add --update --no-cache jq
 
+# Install for envsubst
+RUN apk add --update --no-cache gettext
+
 # Install kubeseal
 RUN curl -sL https://github.com/bitnami-labs/sealed-secrets/releases/download/${KUBESEAL_VERSION}/kubeseal-linux-amd64 -o kubeseal && \
     mv kubeseal /usr/bin/kubeseal && \

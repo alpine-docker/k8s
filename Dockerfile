@@ -38,7 +38,7 @@ RUN curl -sLO https://github.com/kubernetes-sigs/kustomize/releases/download/kus
     chmod +x /usr/bin/kustomize
 
 # Install eksctl (latest version)
-RUN curl -sL "https://github.com/weaveworks/eksctl/releases/download/latest_release/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp && \
+RUN curl -sL "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp && \
     mv /tmp/eksctl /usr/bin && \
     chmod +x /usr/bin/eksctl
 

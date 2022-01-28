@@ -20,6 +20,7 @@ There is no `latest` tag for this image
 - [eksctl](https://github.com/weaveworks/eksctl) (latest version when run the build)
 - [awscli v1](https://github.com/aws/aws-cli) (latest version when run the build)
 - [kubeseal](https://github.com/bitnami-labs/sealed-secrets) (latest version when run the build)
+- [k9s](https://github.com/derailed/k9s) (latest version when run the build)
 - General tools, such as bash, curl
 
 ### Github Repo

@@ -37,6 +37,11 @@ RUN curl -sLO https://github.com/kubernetes-sigs/kustomize/releases/download/kus
     mv kustomize /usr/bin/kustomize && \
     chmod +x /usr/bin/kustomize
 
+# Installing k9s
+RUN curl -sL https://github.com/derailed/k9s/releases/latest/download/k9s_Linux_x86_64.tar.gz | tar -xvz && \
+    mv k9s /usr/bin/k9s && \
+    rm -rf LICENSE README.md
+
 # Install eksctl (latest version)
 RUN curl -sL "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp && \
     mv /tmp/eksctl /usr/bin && \

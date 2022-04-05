@@ -18,7 +18,7 @@ There is no `latest` tag for this image
 - [helm-push](https://github.com/chartmuseum/helm-push) (latest commit)
 - [aws-iam-authenticator](https://github.com/kubernetes-sigs/aws-iam-authenticator) (latest version when run the build)
 - [eksctl](https://github.com/weaveworks/eksctl) (latest version when run the build)
-- [awscli v2.1.39](https://github.com/aws/aws-cli) (latest version when run the build)
+- [awscli](https://github.com/aws/aws-cli) (v2.1.39)
 - [kubeseal](https://github.com/bitnami-labs/sealed-secrets) (latest version when run the build)
 - General tools, such as bash, curl
 

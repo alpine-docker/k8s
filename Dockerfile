@@ -6,6 +6,7 @@ ARG HELM_VERSION=3.2.1
 ARG KUBECTL_VERSION=1.17.5
 ARG KUSTOMIZE_VERSION=v3.8.1
 ARG KUBESEAL_VERSION=v0.15.0
+ARG AWS_CLI_VERSION=2.1.39
 
 # Install helm (latest release)
 # ENV BASE_URL="https://storage.googleapis.com/kubernetes-helm"
@@ -42,12 +43,13 @@ RUN curl -sL "https://github.com/weaveworks/eksctl/releases/latest/download/eksc
     mv /tmp/eksctl /usr/bin && \
     chmod +x /usr/bin/eksctl
 
-# Install awscli
-RUN apk add --update --no-cache python3 && \
-    python3 -m ensurepip && \
-    pip3 install --upgrade pip && \
-    pip3 install awscli && \
-    pip3 cache purge
+# Install awscli v2
+RUN apk add --update --no-cache curl gcompat groff && \
+    curl -sL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-${AWS_CLI_VERSION}.zip" -o "awscliv2.zip" && \
+    unzip awscliv2.zip && rm awscliv2.zip && \
+    ./aws/install -i /usr/bin/aws-cli -b /usr/bin && \
+	chmod +x /usr/bin/aws && \
+	rm -rf awscliv2.zip aws
 
 # https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html
 # Install aws-iam-authenticator

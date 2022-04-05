@@ -44,7 +44,7 @@ RUN curl -sL "https://github.com/weaveworks/eksctl/releases/latest/download/eksc
     chmod +x /usr/bin/eksctl
 
 # Install awscli v2
-RUN apk add --update --no-cache curl gcompat groff && \
+RUN apk add --update --no-cache gcompat groff && \
     curl -sL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-${AWS_CLI_VERSION}.zip" -o "awscliv2.zip" && \
     unzip awscliv2.zip && rm awscliv2.zip && \
     ./aws/install -i /usr/bin/aws-cli -b /usr/bin && \

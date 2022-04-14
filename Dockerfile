@@ -61,6 +61,12 @@ RUN apk add --update --no-cache gcompat groff && \
     mv /usr/local/bin/aws /usr/local/bin/awsv2 && \
     rm -rf awscliv2.zip aws
 
+# https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html
+# Install aws-iam-authenticator
+RUN authenticator=$(awsv1 --no-sign-request s3 ls s3://amazon-eks --recursive |grep aws-iam-authenticator$|grep amd64 |awk '{print $NF}' |sort -V|tail -1) && \
+    awsv1 --no-sign-request s3 cp s3://amazon-eks/${authenticator} /usr/bin/aws-iam-authenticator && \
+    chmod +x /usr/bin/aws-iam-authenticator
+
 # Install jq
 RUN apk add --update --no-cache jq
 

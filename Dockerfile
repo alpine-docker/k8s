@@ -6,6 +6,7 @@ ARG HELM_VERSION=3.2.1
 ARG KUBECTL_VERSION=1.17.5
 ARG KUSTOMIZE_VERSION=v3.8.1
 ARG KUBESEAL_VERSION=v0.15.0
+ARG AWS_CLI_VERSION=2.1.39
 
 # Install helm (latest release)
 # ENV BASE_URL="https://storage.googleapis.com/kubernetes-helm"
@@ -42,17 +43,28 @@ RUN curl -sL "https://github.com/weaveworks/eksctl/releases/latest/download/eksc
     mv /tmp/eksctl /usr/bin && \
     chmod +x /usr/bin/eksctl
 
-# Install awscli
+# Install awscli v1 
 RUN apk add --update --no-cache python3 && \
-    python3 -m ensurepip && \
-    pip3 install --upgrade pip && \
-    pip3 install awscli && \
-    pip3 cache purge
+    ln -s /usr/bin/python3 /usr/bin/python && \
+    curl -sL "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscliv1.zip" && \
+    unzip awscliv1.zip && \
+    ./awscli-bundle/install -i /usr/local/aws-cli-v1 -b /usr/local/bin/awsv1 && \
+    chmod +x /usr/local/bin/awsv1 && \
+    rm -rf awscliv1.zip awscli-bundle
+
+# Install awscli v2
+RUN apk add --update --no-cache gcompat groff && \
+    curl -sL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-${AWS_CLI_VERSION}.zip" -o "awscliv2.zip" && \
+    unzip awscliv2.zip && \
+    ./aws/install -i /usr/local/aws-cli-v2 -b /usr/local/bin && \
+    chmod +x /usr/local/bin/aws && \
+    mv /usr/local/bin/aws /usr/local/bin/awsv2 && \
+    rm -rf awscliv2.zip aws
 
 # https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html
 # Install aws-iam-authenticator
-RUN authenticator=$(aws --no-sign-request s3 ls s3://amazon-eks --recursive |grep aws-iam-authenticator$|grep amd64 |awk '{print $NF}' |sort -V|tail -1) && \
-    aws --no-sign-request s3 cp s3://amazon-eks/${authenticator} /usr/bin/aws-iam-authenticator && \
+RUN authenticator=$(awsv1 --no-sign-request s3 ls s3://amazon-eks --recursive |grep aws-iam-authenticator$|grep amd64 |awk '{print $NF}' |sort -V|tail -1) && \
+    awsv1 --no-sign-request s3 cp s3://amazon-eks/${authenticator} /usr/bin/aws-iam-authenticator && \
     chmod +x /usr/bin/aws-iam-authenticator
 
 # Install jq
@@ -66,4 +78,8 @@ RUN curl -sL https://github.com/bitnami-labs/sealed-secrets/releases/download/${
     mv kubeseal /usr/bin/kubeseal && \
     chmod +x /usr/bin/kubeseal
 
+COPY entrypoint.sh entrypoint.sh
+
 WORKDIR /apps
+
+ENTRYPOINT ["/entrypoint.sh"]

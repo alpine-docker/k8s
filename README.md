@@ -18,7 +18,8 @@ There is no `latest` tag for this image
 - [helm-push](https://github.com/chartmuseum/helm-push) (latest commit)
 - [aws-iam-authenticator](https://github.com/kubernetes-sigs/aws-iam-authenticator) (latest version when run the build)
 - [eksctl](https://github.com/weaveworks/eksctl) (latest version when run the build)
-- [awscli v1](https://github.com/aws/aws-cli) (latest version when run the build)
+- [awscliv1](https://github.com/aws/aws-cli) (latest version when run the build)
+- [awscliv2](https://github.com/aws/aws-cli) (v2.1.39)
 - [kubeseal](https://github.com/bitnami-labs/sealed-secrets) (latest version when run the build)
 - General tools, such as bash, curl
 
@@ -33,6 +34,15 @@ https://app.circleci.com/pipelines/github/alpine-docker/k8s
 ### Docker image tags
 
 https://hub.docker.com/r/alpine/k8s/tags/
+
+# Quick start
+Set environmental variable `awscli` to `v2` to use awscliv2 by default, otherwise awscliv1 is used.
+
+To pass an environmental variable to a docker image use the `-e` option:
+
+```
+docker -e awscli=v2 ...
+```
 
 # Why we need it
 

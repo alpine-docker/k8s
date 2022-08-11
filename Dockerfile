@@ -5,7 +5,7 @@ FROM alpine
 ARG HELM_VERSION=3.2.1
 ARG KUBECTL_VERSION=1.17.5
 ARG KUSTOMIZE_VERSION=v3.8.1
-ARG KUBESEAL_VERSION=v0.15.0
+ARG KUBESEAL_VERSION=0.18.1
 
 # Install helm (latest release)
 # ENV BASE_URL="https://storage.googleapis.com/kubernetes-helm"
@@ -62,8 +62,7 @@ RUN apk add --update --no-cache jq
 RUN apk add --update --no-cache gettext
 
 # Install kubeseal
-RUN curl -sL https://github.com/bitnami-labs/sealed-secrets/releases/download/${KUBESEAL_VERSION}/kubeseal-linux-amd64 -o kubeseal && \
-    mv kubeseal /usr/bin/kubeseal && \
+RUN curl -L https://github.com/bitnami-labs/sealed-secrets/releases/download/v${KUBESEAL_VERSION}/kubeseal-${KUBESEAL_VERSION}-linux-amd64.tar.gz -o - | tar xz -C /usr/bin/ && \
     chmod +x /usr/bin/kubeseal
 
 WORKDIR /apps

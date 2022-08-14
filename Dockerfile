@@ -56,10 +56,7 @@ RUN authenticator=$(aws --no-sign-request s3 ls s3://amazon-eks --recursive |gre
     chmod +x /usr/bin/aws-iam-authenticator
 
 # Install jq
-RUN apk add --update --no-cache jq
-
-# Install yq
-RUN apk add --update --no-cache yq
+RUN apk add --update --no-cache jq yq
 
 # Install for envsubst
 RUN apk add --update --no-cache gettext

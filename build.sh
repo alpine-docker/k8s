@@ -31,7 +31,7 @@ build() {
 
   # kubeseal latest
   kubeseal_version=$(curl -s https://api.github.com/repos/bitnami-labs/sealed-secrets/releases | /usr/bin/jq -r '.[].tag_name | select(startswith("v"))' \
-    | sort -rV | head -n 1)
+    | sort -rV | head -n 1 |sed 's/v//')
   echo "kubeseal version is $kubeseal_version"
 
   docker build --no-cache \

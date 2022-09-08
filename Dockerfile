@@ -6,6 +6,7 @@ FROM alpine:edge
 ARG HELM_VERSION=3.4.2
 ARG KUBECTL_VERSION=1.20.0
 ARG AWS_IAM_AUTH_VERSION=0.5.2
+ARG CRANE_VERSION=0.11.0
 
 ENV AWS_DEFAULT_REGION=eu-west-1
 
@@ -34,5 +35,10 @@ RUN curl -LO https://github.com/kubernetes-sigs/aws-iam-authenticator/releases/d
     mv aws-iam-authenticator_${AWS_IAM_AUTH_VERSION}_linux_amd64 /usr/bin/aws-iam-authenticator && \
     chmod +x /usr/bin/aws-iam-authenticator
 
+# Install crane
+RUN mkdir crane && \
+    curl -L https://github.com/google/go-containerregistry/releases/download/v${CRANE_VERSION}/go-containerregistry_Linux_x86_64.tar.gz | tar xvz -C crane && \
+    mv crane/crane /usr/bin/crane && \
+    rm -rf crane
 
 WORKDIR /apps

@@ -56,7 +56,7 @@ build() {
 
   if [[ "$CIRCLE_BRANCH" == "master" ]]; then
     docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-    # docker push ${image}:${tag}
+    docker push ${image}:${tag}
   fi
 }
 

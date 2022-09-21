@@ -1,6 +1,8 @@
-# Kubernetes tools for EKS
+# All in one Kubernetes tools (kubectl, helm, iam-authenticator, eksctl, kubeseal, etc)
 
 kubernetes docker images with necessary tools 
+
+If need more tools to be added, raise tickets in issues.
 
 ### Preface
 

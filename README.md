@@ -22,7 +22,7 @@ kubernetes docker images with necessary tools
 - [eksctl](https://github.com/weaveworks/eksctl) (latest version when run the build)
 - [awscli v1](https://github.com/aws/aws-cli) (latest version when run the build)
 - [kubeseal](https://github.com/bitnami-labs/sealed-secrets) (latest version when run the build)
-- General tools, such as bash, curl
+- General tools, such as bash, curl, jq, yq, etc
 
 ### Github Repo
 

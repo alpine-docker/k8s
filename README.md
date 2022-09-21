@@ -1,16 +1,18 @@
 # Kubernetes tools for EKS
 
-kubernetes images with necessary tools for AWS EKS, it can be used as normal kubectl tool as well.
+kubernetes docker images with necessary tools 
 
 ### Preface
 
-[AWS EKS](https://aws.amazon.com/eks) maintains [special kubernetes versions](https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html) to its managed service. This repo and its built images are used to simplify the way on how easily you can deploy applicaitons with it
+Notes:
 
-There is no `latest` tag for this image
+(1) For AWS EKS users, not all versions are supported yet. [AWS EKS](https://aws.amazon.com/eks) maintains [special kubernetes versions](https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html) to its managed service. Do remember to choice the proper version for EKS only.
+
+(2) There is no `latest` tag for this image
 
 ### Installed tools
 
-- [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) (eks versions: https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html)
+- [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) (latest minor versions: https://kubernetes.io/releases/)
 - [kustomize](https://github.com/kubernetes-sigs/kustomize) (latest release: https://github.com/kubernetes-sigs/kustomize/releases/latest)
 - [helm](https://github.com/helm/helm) (latest release: https://github.com/helm/helm/releases/latest)
 - [helm-diff](https://github.com/databus23/helm-diff) (latest commit)
@@ -40,7 +42,7 @@ Mostly it is used during CI/CD (continuous integration and continuous delivery) 
 
 # kubectl versions
 
-You should check in [kubernetes versions](https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html), it lists the kubectl version and used as image tags.
+You should check in [kubernetes versions](https://kubernetes.io/releases/), it lists the kubectl latest minor versions and used as image tags.
 
 # Involve with developing and testing
 
@@ -48,9 +50,10 @@ If you want to build these images by yourself, please follow below commands.
 
 ```
 export REBUILD=true
+# comment the line in file "build.sh" to stop image push:  docker push ${image}:${tag}
 bash ./build.sh
 ```
 
 ### Weekly build
 
-Build job runs weekly
+Automation build job runs weekly by Circle CI Pipeline.

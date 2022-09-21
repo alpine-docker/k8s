@@ -2,13 +2,13 @@
 
 kubernetes docker images with necessary tools 
 
-If need more tools to be added, raise tickets in issues.
-
 ### Notes
 
 (1) For AWS EKS users, not all versions are supported yet. [AWS EKS](https://aws.amazon.com/eks) maintains [special kubernetes versions](https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html) to its managed service. Do remember to choice the proper version for EKS only.
 
 (2) There is no `latest` tag for this image
+
+(3) If you need more tools to be added, raise tickets in issues.
 
 ### Installed tools
 

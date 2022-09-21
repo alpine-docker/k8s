@@ -61,7 +61,10 @@ build() {
 }
 
 image="alpine/k8s"
-curl -s https://raw.githubusercontent.com/awsdocs/amazon-eks-user-guide/master/doc_source/kubernetes-versions.md |egrep -A 10 "The following Kubernetes versions"|awk -F \` '/^\+/ {print $2}'|sort -Vr | while read tag
+curl -s https://kubernetes.io/releases/ > release.html
+
+docker run -ti --rm -v $(pwd):/app bwits/html2txt  /app/release.html /app/release.txt
+awk -F "[: ]" '/released:/{print $3}' release.txt | while read tag
 do
   echo ${tag}
   status=$(curl -sL https://hub.docker.com/v2/repositories/${image}/tags/${tag})

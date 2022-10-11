@@ -49,14 +49,14 @@ RUN apk add --update --no-cache python3 && \
     pip3 install awscli && \
     pip3 cache purge
 
-# https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html
-# Install aws-iam-authenticator
-RUN authenticator=$(aws --no-sign-request s3 ls s3://amazon-eks --recursive |grep aws-iam-authenticator$|grep amd64 |awk '{print $NF}' |sort -V|tail -1) && \
-    aws --no-sign-request s3 cp s3://amazon-eks/${authenticator} /usr/bin/aws-iam-authenticator && \
-    chmod +x /usr/bin/aws-iam-authenticator
-
 # Install jq
 RUN apk add --update --no-cache jq yq
+
+# https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html
+# Install aws-iam-authenticator (latest version)
+RUN authenticator=$(curl -fs https://api.github.com/repos/kubernetes-sigs/aws-iam-authenticator/releases/latest | jq --raw-output '.name' | sed 's/^.//') && \
+    curl -fL https://github.com/kubernetes-sigs/aws-iam-authenticator/releases/download/v${authenticator}/aws-iam-authenticator_${authenticator}_linux_amd64 -o /usr/bin/aws-iam-authenticator && \
+    chmod +x /usr/bin/aws-iam-authenticator
 
 # Install for envsubst
 RUN apk add --update --no-cache gettext

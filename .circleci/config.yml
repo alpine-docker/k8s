@@ -6,9 +6,18 @@ version: 2.1
 # DOCKER_PASSWORD
 # API_TOKEN
 
+# REBUILD - it has default value "false", if need rebuild the image, turn it on with value "true"
+
+parameters:
+  rebuild:
+    type: string
+    default: "false"
+
 jobs:
   build:
     machine: true
+    environment:
+      REBUILD: << pipeline.parameters.rebuild >>
     steps:
       - checkout
       - run: |

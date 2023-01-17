@@ -18,13 +18,13 @@ RUN apk add --update --no-cache curl ca-certificates bash git && \
     rm -rf linux-amd64 /root/.local /root/.cache
 
 # add helm-diff
-RUN helm plugin install https://github.com/databus23/helm-diff && rm -rf /tmp/helm-* /root/.local /root/.cache
+RUN helm plugin install https://github.com/databus23/helm-diff && rm -rf /tmp/helm-* /root/.cache
 
 # add helm-unittest
-RUN helm plugin install https://github.com/quintush/helm-unittest && rm -rf /tmp/helm-* /root/.local /root/.cache
+RUN helm plugin install https://github.com/quintush/helm-unittest && rm -rf /tmp/helm-* /root/.cache
 
 # add helm-push
-RUN helm plugin install https://github.com/chartmuseum/helm-push && rm -rf /tmp/helm-* /root/.local /root/.cache
+RUN helm plugin install https://github.com/chartmuseum/helm-push && rm -rf /tmp/helm-* /root/.cache
 
 # Install kubectl (same version of aws esk)
 RUN curl -sLO https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl && \

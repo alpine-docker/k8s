@@ -24,7 +24,7 @@ RUN helm plugin install https://github.com/databus23/helm-diff && rm -rf /tmp/he
 RUN helm plugin install https://github.com/quintush/helm-unittest && rm -rf /tmp/helm-* /root/.cache
 
 # add helm-push
-RUN helm plugin install https://github.com/chartmuseum/helm-push && rm -rf /tmp/helm-* /root/.cache
+RUN helm plugin install https://github.com/chartmuseum/helm-push && rm -rf /tmp/helm-* /root/.cache /root/.local/share/helm/plugins/helm-push/testdata
 
 # Install kubectl (same version of aws esk)
 RUN curl -sLO https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl && \

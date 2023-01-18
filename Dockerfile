@@ -15,16 +15,19 @@ RUN apk add --update --no-cache curl ca-certificates bash git && \
     curl -sL ${BASE_URL}/${TAR_FILE} | tar -xvz && \
     mv linux-amd64/helm /usr/bin/helm && \
     chmod +x /usr/bin/helm && \
-    rm -rf linux-amd64 /root/.local /root/.cache
+    rm -rf linux-amd64
 
 # add helm-diff
-RUN helm plugin install https://github.com/databus23/helm-diff && rm -rf /tmp/helm-* /root/.local /root/.cache
+RUN helm plugin install https://github.com/databus23/helm-diff && rm -rf /tmp/helm-*
 
 # add helm-unittest
-RUN helm plugin install https://github.com/quintush/helm-unittest && rm -rf /tmp/helm-* /root/.local /root/.cache
+RUN helm plugin install https://github.com/quintush/helm-unittest && rm -rf /tmp/helm-*
 
 # add helm-push
-RUN helm plugin install https://github.com/chartmuseum/helm-push && rm -rf /tmp/helm-* /root/.local /root/.cache
+RUN helm plugin install https://github.com/chartmuseum/helm-push && \
+  rm -rf /tmp/helm-* \
+    /root/.local/share/helm/plugins/helm-push/testdata \
+    /root/.cache/helm/plugins/https-github.com-chartmuseum-helm-push/testdata
 
 # Install kubectl (same version of aws esk)
 RUN curl -sLO https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl && \
@@ -47,8 +50,7 @@ RUN apk add --update --no-cache python3 && \
     python3 -m ensurepip && \
     pip3 install --upgrade pip && \
     pip3 install awscli && \
-    pip3 cache purge && \
-    rm -rf /root/.cache
+    pip3 cache purge
 
 # Install jq
 RUN apk add --update --no-cache jq yq

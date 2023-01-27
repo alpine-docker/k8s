@@ -45,11 +45,11 @@ RUN curl -sL "https://github.com/weaveworks/eksctl/releases/latest/download/eksc
     mv /tmp/eksctl /usr/bin && \
     chmod +x /usr/bin/eksctl
 
-# Install awscli
+# Install AWS CLI and Azure CLI
 RUN apk add --update --no-cache python3 && \
     python3 -m ensurepip && \
     pip3 install --upgrade pip && \
-    pip3 install awscli && \
+    pip3 install awscli azure-cli && \
     pip3 cache purge
 
 # Install jq

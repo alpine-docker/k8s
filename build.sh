@@ -34,7 +34,8 @@ build() {
     | sort -rV | head -n 1 |sed 's/v//')
   echo "kubeseal version is $kubeseal_version"
 
-  docker build --no-cache \
+  docker buildx build --no-cache \
+    --platform=linux/amd64,linux/arm64 \
     --build-arg KUBECTL_VERSION=${tag} \
     --build-arg HELM_VERSION=${helm} \
     --build-arg KUSTOMIZE_VERSION=${kustomize_version} \

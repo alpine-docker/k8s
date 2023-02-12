@@ -34,8 +34,7 @@ build() {
     | sort -rV | head -n 1 |sed 's/v//')
   echo "kubeseal version is $kubeseal_version"
 
-  docker buildx build --no-cache \
-    --platform=linux/amd64,linux/arm64 \
+  docker build --no-cache \
     --build-arg KUBECTL_VERSION=${tag} \
     --build-arg HELM_VERSION=${helm} \
     --build-arg KUSTOMIZE_VERSION=${kustomize_version} \
@@ -57,7 +56,14 @@ build() {
 
   if [[ "$CIRCLE_BRANCH" == "master" ]]; then
     docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-    docker push ${image}:${tag}
+    docker buildx create --use
+    docker buildx build --no-cache --push \
+      --platform=linux/amd64,linux/arm/v7,linux/arm64/v8,linux/arm/v6,linux/ppc64le,linux/s390x \
+      --build-arg KUBECTL_VERSION=${tag} \
+      --build-arg HELM_VERSION=${helm} \
+      --build-arg KUSTOMIZE_VERSION=${kustomize_version} \
+      --build-arg KUBESEAL_VERSION=${kubeseal_version} \
+      -t ${image}:${tag} .
   fi
 }
 

@@ -15,14 +15,11 @@ parameters:
 
 jobs:
   build:
-    docker:
-      - image: alpine/docker-with-buildx
+    machine: true
     environment:
       REBUILD: << pipeline.parameters.rebuild >>
     steps:
       - checkout
-      - setup_remote_docker:
-          version: 18.09.3
       - run: |
           bash ./build.sh
 

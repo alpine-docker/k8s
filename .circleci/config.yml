@@ -24,8 +24,7 @@ jobs:
       - setup_remote_docker:
           version: 18.09.3
       - run: |
-          apk --no-cache --update add bash curl
-          bash -x ./build.sh
+          bash ./build.sh
 
 workflows:
   build:
@@ -36,7 +35,7 @@ workflows:
   nightly:
     triggers:
        - schedule:
-           cron: "0 2 * * 0"
+           cron: "0 2 * * *"
            filters:
              branches:
                only:

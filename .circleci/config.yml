@@ -25,7 +25,7 @@ jobs:
           version: 18.09.3
       - run: |
           apk --no-cache --update add bash curl
-          bash ./build.sh
+          bash -x ./build.sh
 
 workflows:
   build:

@@ -70,6 +70,8 @@ build() {
 image="alpine/k8s"
 curl -s https://kubernetes.io/releases/ > release.html
 
+cat release.html
+
 docker run -ti --rm -v $(pwd):/app bwits/html2txt  /app/release.html /app/release.txt
 awk -F "[: ]" '/released:/{print $3}' release.txt | while read tag
 do

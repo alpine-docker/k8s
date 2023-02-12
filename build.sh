@@ -9,28 +9,29 @@
 
 set -e
 
-build() {
-
-  # helm latest
-  helm=$(curl -s https://github.com/helm/helm/releases)
-  helm=$(echo $helm\" |grep -oP '(?<=tag\/v)[0-9][^"]*'|grep -v \-|sort -Vr|head -1)
-  echo "helm version is $helm"
-
+install_jq() {
   # jq 1.6
   DEBIAN_FRONTEND=noninteractive
   #sudo apt-get update && sudo apt-get -q -y install jq
   curl -sL https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 -o jq
   sudo mv jq /usr/bin/jq
   sudo chmod +x /usr/bin/jq
+}
+
+build() {
+  # helm latest
+  helm=$(curl -s https://api.github.com/repos/helm/helm/releases | jq -r '.[].tag_name | select(startswith("v"))' \
+    | sort -rV | head -n 1 |sed 's/v//')
+  echo "helm version is $helm"
 
   # kustomize latest
-  kustomize_release=$(curl -s https://api.github.com/repos/kubernetes-sigs/kustomize/releases | /usr/bin/jq -r '.[].tag_name | select(contains("kustomize"))' \
+  kustomize_release=$(curl -s https://api.github.com/repos/kubernetes-sigs/kustomize/releases | jq -r '.[].tag_name | select(contains("kustomize"))' \
     | sort -rV | head -n 1)
   kustomize_version=$(basename ${kustomize_release})
   echo "kustomize version is $kustomize_version"
 
   # kubeseal latest
-  kubeseal_version=$(curl -s https://api.github.com/repos/bitnami-labs/sealed-secrets/releases | /usr/bin/jq -r '.[].tag_name | select(startswith("v"))' \
+  kubeseal_version=$(curl -s https://api.github.com/repos/bitnami-labs/sealed-secrets/releases | jq -r '.[].tag_name | select(startswith("v"))' \
     | sort -rV | head -n 1 |sed 's/v//')
   echo "kubeseal version is $kubeseal_version"
 
@@ -56,20 +57,52 @@ build() {
 
   if [[ "$CIRCLE_BRANCH" == "master" ]]; then
     docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-    docker push ${image}:${tag}
+    docker buildx create --use
+    docker buildx build --no-cache --push \
+      --platform=linux/amd64,linux/arm64 \
+      --build-arg KUBECTL_VERSION=${tag} \
+      --build-arg HELM_VERSION=${helm} \
+      --build-arg KUSTOMIZE_VERSION=${kustomize_version} \
+      --build-arg KUBESEAL_VERSION=${kubeseal_version} \
+      -t ${image}:${tag} .
   fi
 }
 
 image="alpine/k8s"
-curl -s https://kubernetes.io/releases/ > release.html
 
-docker run -ti --rm -v $(pwd):/app bwits/html2txt  /app/release.html /app/release.txt
-awk -F "[: ]" '/released:/{print $3}' release.txt | while read tag
-do
+install_jq
+
+# Get the list of all releases tags, excludes alpha, beta, rc tags
+releases=$(curl -s https://api.github.com/repos/kubernetes/kubernetes/releases | jq -r '.[].tag_name | select(test("alpha|beta|rc") | not)')
+
+# Loop through the releases and extract the minor version number
+for release in $releases; do
+  minor_version=$(echo $release | awk -F'.' '{print $1"."$2}')
+  
+  # Check if the minor version is already in the array of minor versions
+  if [[ ! " ${minor_versions[@]} " =~ " ${minor_version} " ]]; then
+    minor_versions+=($minor_version)
+  fi
+done
+
+# Sort the unique minor versions in reverse order
+sorted_minor_versions=($(echo "${minor_versions[@]}" | tr ' ' '\n' | sort -rV))
+
+# Loop through the first 4 unique minor versions and get the latest version for each
+for i in $(seq 0 3); do
+  minor_version="${sorted_minor_versions[$i]}"
+  latest_version=$(echo "$releases" | grep "^$minor_version\." | sort -rV | head -1 | sed 's/v//')
+  latest_versions+=($latest_version)
+done
+
+echo "Found k8s latest versions: ${latest_versions[*]}"
+
+for tag in "${latest_versions[@]}"; do
   echo ${tag}
   status=$(curl -sL https://hub.docker.com/v2/repositories/${image}/tags/${tag})
   echo $status
-  if [[ ( "${status}" =~ "not found" ) || ( ${REBUILD} == "true" ) ]]; then
+  if [[ ( "${status}" =~ "not found" ) ||( ${REBUILD} == "true" ) ]]; then
+     echo "build image for ${tag}"
      build
   fi
 done

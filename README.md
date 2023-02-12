@@ -10,6 +10,8 @@ kubernetes docker images with necessary tools
 
 (3) If you need more tools to be added, raise tickets in issues.
 
+(4) This image only supports `linux/amd64,linux/arm64` platform.
+
 ### Installed tools
 
 - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) (latest minor versions: https://kubernetes.io/releases/)

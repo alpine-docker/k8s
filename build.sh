@@ -56,7 +56,14 @@ build() {
 
   if [[ "$CIRCLE_BRANCH" == "master" ]]; then
     docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-    docker push ${image}:${tag}
+    docker buildx create --use
+    docker buildx build --no-cache --push \
+      --platform=linux/amd64,linux/arm64 \
+      --build-arg KUBECTL_VERSION=${tag} \
+      --build-arg HELM_VERSION=${helm} \
+      --build-arg KUSTOMIZE_VERSION=${kustomize_version} \
+      --build-arg KUBESEAL_VERSION=${kubeseal_version} \
+      -t ${image}:${tag} .
   fi
 }
 

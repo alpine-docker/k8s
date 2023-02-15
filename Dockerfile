@@ -88,5 +88,5 @@ RUN . /envfile && echo $ARCH && \
 WORKDIR /apps
 
 # Run as unprivileged user
-RUN addgroup --system k8s && adduser -S k8s k8s
-USER k8s
+RUN addgroup --system k8s && adduser -S -u 5280 k8s k8s
+USER 5280

@@ -11,7 +11,7 @@ version: 2.1
 parameters:
   rebuild:
     type: string
-    default: "false"
+    default: "true"
 
 jobs:
   build:
@@ -25,6 +25,7 @@ jobs:
           version: 18.09.3
       - run: |
           apk --no-cache --update add bash curl sudo
+          echo $REBUILD
           bash ./build.sh
 
 workflows:
@@ -36,7 +37,7 @@ workflows:
   nightly:
     triggers:
        - schedule:
-           cron: "0 2 * * *"
+           cron: "0 2 * * 0"
            filters:
              branches:
                only:

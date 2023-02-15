@@ -86,3 +86,7 @@ RUN . /envfile && echo $ARCH && \
     chmod +x /usr/bin/kubeseal
 
 WORKDIR /apps
+
+# Run as unprivileged user
+RUN addgroup --system k8s && adduser -S k8s k8s
+USER k8s

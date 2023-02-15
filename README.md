@@ -2,6 +2,8 @@
 
 kubernetes docker images with necessary tools 
 
+[![DockerHub Badge](http://dockeri.co/image/alpine/k8s)](https://hub.docker.com/r/alpine/k8s/)
+
 ### Notes
 
 (1) For AWS EKS users, not all versions are supported yet. [AWS EKS](https://aws.amazon.com/eks) maintains [special kubernetes versions](https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html) to its managed service. Do remember to choice the proper version for EKS only.

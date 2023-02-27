@@ -20,7 +20,7 @@ kubernetes docker images with necessary tools
 - [kustomize](https://github.com/kubernetes-sigs/kustomize) (latest release: https://github.com/kubernetes-sigs/kustomize/releases/latest)
 - [helm](https://github.com/helm/helm) (latest release: https://github.com/helm/helm/releases/latest)
 - [helm-diff](https://github.com/databus23/helm-diff) (latest commit)
-- [helm-unittest](https://github.com/quintush/helm-unittest) (latest commit)
+- [helm-unittest](https://github.com/helm-unittest/helm-unittest) (latest commit)
 - [helm-push](https://github.com/chartmuseum/helm-push) (latest commit)
 - [aws-iam-authenticator](https://github.com/kubernetes-sigs/aws-iam-authenticator) (latest version when run the build)
 - [eksctl](https://github.com/weaveworks/eksctl) (latest version when run the build)

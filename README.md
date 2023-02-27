@@ -2,6 +2,8 @@
 
 kubernetes docker images with necessary tools 
 
+[![DockerHub Badge](http://dockeri.co/image/alpine/k8s)](https://hub.docker.com/r/alpine/k8s/)
+
 ### Notes
 
 (1) For AWS EKS users, not all versions are supported yet. [AWS EKS](https://aws.amazon.com/eks) maintains [special kubernetes versions](https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html) to its managed service. Do remember to choice the proper version for EKS only.
@@ -18,7 +20,7 @@ kubernetes docker images with necessary tools
 - [kustomize](https://github.com/kubernetes-sigs/kustomize) (latest release: https://github.com/kubernetes-sigs/kustomize/releases/latest)
 - [helm](https://github.com/helm/helm) (latest release: https://github.com/helm/helm/releases/latest)
 - [helm-diff](https://github.com/databus23/helm-diff) (latest commit)
-- [helm-unittest](https://github.com/quintush/helm-unittest) (latest commit)
+- [helm-unittest](https://github.com/helm-unittest/helm-unittest) (latest commit)
 - [helm-push](https://github.com/chartmuseum/helm-push) (latest commit)
 - [aws-iam-authenticator](https://github.com/kubernetes-sigs/aws-iam-authenticator) (latest version when run the build)
 - [eksctl](https://github.com/weaveworks/eksctl) (latest version when run the build)

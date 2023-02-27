@@ -8,6 +8,8 @@ ARG HELM_VERSION=3.2.1
 ARG KUBECTL_VERSION=1.17.5
 ARG KUSTOMIZE_VERSION=v3.8.1
 ARG KUBESEAL_VERSION=0.18.1
+ARG NONROOT_USER=k8s
+ARG NONROOT_USER_ID=5280
 
 # Install helm (latest release)
 # ENV BASE_URL="https://storage.googleapis.com/kubernetes-helm"
@@ -29,18 +31,6 @@ RUN . /envfile && echo $ARCH && \
     chmod +x /usr/bin/helm && \
     rm -rf linux-${ARCH}
 
-# add helm-diff
-RUN helm plugin install https://github.com/databus23/helm-diff && rm -rf /tmp/helm-*
-
-# add helm-unittest
-RUN helm plugin install https://github.com/quintush/helm-unittest && rm -rf /tmp/helm-*
-
-# add helm-push
-RUN helm plugin install https://github.com/chartmuseum/helm-push && \
-    rm -rf /tmp/helm-* \
-    /root/.local/share/helm/plugins/helm-push/testdata \
-    /root/.cache/helm/plugins/https-github.com-chartmuseum-helm-push/testdata
-
 # Install kubectl
 RUN . /envfile && echo $ARCH && \
     curl -sLO https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/${ARCH}/kubectl && \
@@ -61,7 +51,7 @@ RUN . /envfile && echo $ARCH && \
     chmod +x /usr/bin/eksctl
 
 # Install awscli
-RUN apk add --update --no-cache python3 && \
+RUN apk add --update --no-cache python3 groff && \
     python3 -m ensurepip && \
     pip3 install --upgrade pip && \
     pip3 install awscli && \
@@ -88,5 +78,18 @@ RUN . /envfile && echo $ARCH && \
 WORKDIR /apps
 
 # Run as unprivileged user
-RUN addgroup --system k8s && adduser -S -u 5280 k8s k8s
-USER 5280
+RUN addgroup --system ${NONROOT_USER} && \
+    adduser -S -u ${NONROOT_USER_ID} ${NONROOT_USER} ${NONROOT_USER}
+USER ${NONROOT_USER_ID}
+
+# Helm plugins must be installed by the user
+RUN helm plugin install https://github.com/databus23/helm-diff && \
+    helm plugin install https://github.com/quintush/helm-unittest && \
+    helm plugin install https://github.com/chartmuseum/helm-push && \
+    rm -rf /tmp/helm-* \
+        /home/${NONROOT_USER}/.local/share/helm/plugins/helm-push/testdata \
+        /home/${NONROOT_USER}/.cache/helm/plugins/https-github.com-chartmuseum-helm-push/testdata
+
+# Run tests
+COPY test.sh /tmp/test.sh
+RUN /tmp/test.sh

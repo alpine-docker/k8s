@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-set -aeou pipefail
+
+set -euxo pipefail
 
 # Tests that the necessary binaries are present and do not throw errors
 

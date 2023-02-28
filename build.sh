@@ -5,8 +5,6 @@
 # DOCKER_USERNAME
 # DOCKER_PASSWORD
 
-# set -ex
-
 set -e
 
 install_jq() {
@@ -68,9 +66,17 @@ build() {
   fi
 }
 
+test_image() {
+  docker run --rm -itv "$(pwd)/test.sh:/tmp/test.sh" ${image}:${tag} /tmp/test.sh
+}
+
 image="alpine/k8s"
 
-install_jq
+# Install jq if not found
+if ! command -v jq &> /dev/null
+then
+  install_jq
+fi
 
 # Get the list of all releases tags, excludes alpha, beta, rc tags
 releases=$(curl -s https://api.github.com/repos/kubernetes/kubernetes/releases | jq -r '.[].tag_name | select(test("alpha|beta|rc") | not)')
@@ -104,5 +110,6 @@ for tag in "${latest_versions[@]}"; do
   if [[ ( "${status}" =~ "not found" ) ||( ${REBUILD} == "true" ) ]]; then
      echo "build image for ${tag}"
      build
+     test_image
   fi
 done

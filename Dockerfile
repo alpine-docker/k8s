@@ -89,7 +89,3 @@ RUN helm plugin install https://github.com/databus23/helm-diff && \
     rm -rf /tmp/helm-* \
         /home/${NONROOT_USER}/.local/share/helm/plugins/helm-push/testdata \
         /home/${NONROOT_USER}/.cache/helm/plugins/https-github.com-chartmuseum-helm-push/testdata
-
-# Run tests
-COPY test.sh /tmp/test.sh
-RUN /tmp/test.sh

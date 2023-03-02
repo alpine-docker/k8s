@@ -8,6 +8,7 @@ ARG HELM_VERSION=3.2.1
 ARG KUBECTL_VERSION=1.17.5
 ARG KUSTOMIZE_VERSION=v3.8.1
 ARG KUBESEAL_VERSION=0.18.1
+ARG ISTIOCTL_VERSION=1.13.2
 
 # Install helm (latest release)
 # ENV BASE_URL="https://storage.googleapis.com/kubernetes-helm"
@@ -84,5 +85,12 @@ RUN apk add --update --no-cache gettext
 RUN . /envfile && echo $ARCH && \
     curl -L https://github.com/bitnami-labs/sealed-secrets/releases/download/v${KUBESEAL_VERSION}/kubeseal-${KUBESEAL_VERSION}-linux-${ARCH}.tar.gz -o - | tar xz -C /usr/bin/ && \
     chmod +x /usr/bin/kubeseal
+
+# Install istioctl
+RUN . /envfile && echo $ARCH && \
+    curl -L https://github.com/istio/istio/releases/download/${ISTIOCTL_VERSION}/istio-${ISTIOCTL_VERSION}-linux-${ARCH}.tar.gz -o - | tar xz    && \
+    mv istio-${ISTIOCTL_VERSION}/bin/istioctl /usr/bin/ && \
+    rm -rf istio-${ISTIOCTL_VERSION} && \
+    chmod +x /usr/bin/istioctl
 
 WORKDIR /apps

@@ -12,7 +12,7 @@ kubernetes docker images with necessary tools
 
 (3) If you need more tools to be added, raise tickets in issues.
 
-(4) This image supports `linux/amd64,linux/arm64` platform now, updated on 15th Feb 2023 with [#54](https://github.com/alpine-docker/k8s/pull/54)
+(4) This image supports `linux/amd64,linux/arm64` platforms now, updated on 15th Feb 2023 with [#54](https://github.com/alpine-docker/k8s/pull/54)
 
 ### Installed tools
 
@@ -57,6 +57,8 @@ export REBUILD=true
 # comment the line in file "build.sh" to stop image push:  docker push ${image}:${tag}
 bash ./build.sh
 ```
+
+Second thinking, if you are adding a new tool, make sure it is supported in both `linux/amd64,linux/arm64` platforms
 
 ### Weekly build
 

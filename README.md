@@ -8,13 +8,11 @@ kubernetes docker images with necessary tools
 
 ### Notes
 
-(1) For AWS EKS users, not all versions are supported yet. [AWS EKS](https://aws.amazon.com/eks) maintains [special kubernetes versions](https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html) to its managed service. Do remember to choice the proper version for EKS only.
+(1) **There is no `latest` tag for this image**
 
-(2) There is no `latest` tag for this image
+(2) If you need more tools to be added, raise tickets in issues.
 
-(3) If you need more tools to be added, raise tickets in issues.
-
-(4) This image supports `linux/amd64,linux/arm64` platforms now, updated on 15th Feb 2023 with [#54](https://github.com/alpine-docker/k8s/pull/54)
+(3) This image supports `linux/amd64,linux/arm64` platforms now, updated on 15th Feb 2023 with [#54](https://github.com/alpine-docker/k8s/pull/54)
 
 ### Installed tools
 

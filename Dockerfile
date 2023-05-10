@@ -52,7 +52,8 @@ RUN . /envfile && echo $ARCH && \
     curl -sLO https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2F${KUSTOMIZE_VERSION}/kustomize_${KUSTOMIZE_VERSION}_linux_${ARCH}.tar.gz && \
     tar xvzf kustomize_${KUSTOMIZE_VERSION}_linux_${ARCH}.tar.gz && \
     mv kustomize /usr/bin/kustomize && \
-    chmod +x /usr/bin/kustomize
+    chmod +x /usr/bin/kustomize && \
+    rm kustomize_${KUSTOMIZE_VERSION}_linux_${ARCH}.tar.gz
 
 # Install eksctl (latest version)
 RUN . /envfile && echo $ARCH && \

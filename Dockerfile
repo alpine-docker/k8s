@@ -3,9 +3,9 @@ FROM alpine:edge
 # variable "VERSION" must be passed as docker environment variables during the image build
 # docker build --no-cache --build-arg VERSION=2.12.0 -t alpine/helm:2.12.0 .
 
-ARG HELM_VERSION=3.8.1
-ARG KUBECTL_VERSION=1.21.14
-ARG AWS_IAM_AUTH_VERSION=0.5.8
+ARG HELM_VERSION=3.9.3
+ARG KUBECTL_VERSION=1.23.17
+ARG AWS_IAM_AUTH_VERSION=0.6.2
 ARG CRANE_VERSION=0.11.0
 
 ENV AWS_DEFAULT_REGION=eu-west-1

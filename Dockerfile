@@ -29,6 +29,10 @@ RUN . /envfile && echo $ARCH && \
     chmod +x /usr/bin/helm && \
     rm -rf linux-${ARCH}
 
+ENV HELM_PLUGINS=/helm-plugins
+RUN mkdir -p "$HELM_PLUGINS" && \
+    chmod 755 "$HELM_PLUGINS"
+
 # add helm-diff
 RUN helm plugin install https://github.com/databus23/helm-diff && rm -rf /tmp/helm-*
 
@@ -38,7 +42,7 @@ RUN helm plugin install https://github.com/helm-unittest/helm-unittest && rm -rf
 # add helm-push
 RUN helm plugin install https://github.com/chartmuseum/helm-push && \
     rm -rf /tmp/helm-* \
-    /root/.local/share/helm/plugins/helm-push/testdata \
+    "$HELM_PLUGINS/helm-push/testdata" \
     /root/.cache/helm/plugins/https-github.com-chartmuseum-helm-push/testdata
 
 # Install kubectl

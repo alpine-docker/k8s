@@ -63,3 +63,8 @@ Second thinking, if you are adding a new tool, make sure it is supported in both
 ### Weekly build
 
 Automation build job runs weekly by Circle CI Pipeline.
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=alpine-docker/k8s&type=Date)](https://star-history.com/#alpine-docker/k8s&Date)
+

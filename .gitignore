@@ -1,2 +1,6 @@
 release.html
 release.txt
+
+# IDES
+.idea/
+.vscode/

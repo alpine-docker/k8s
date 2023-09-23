@@ -8,6 +8,7 @@ ARG HELM_VERSION=3.2.1
 ARG KUBECTL_VERSION=1.17.5
 ARG KUSTOMIZE_VERSION=v3.8.1
 ARG KUBESEAL_VERSION=0.18.1
+ARG KREW_VERSION=v0.4.4
 
 # Install helm (latest release)
 # ENV BASE_URL="https://storage.googleapis.com/kubernetes-helm"
@@ -85,5 +86,13 @@ RUN apk add --update --no-cache gettext
 RUN . /envfile && echo $ARCH && \
     curl -L https://github.com/bitnami-labs/sealed-secrets/releases/download/v${KUBESEAL_VERSION}/kubeseal-${KUBESEAL_VERSION}-linux-${ARCH}.tar.gz -o - | tar xz -C /usr/bin/ && \
     chmod +x /usr/bin/kubeseal
+
+# Install krew (latest release)
+RUN . /envfile && echo $ARCH && \
+    curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/download/${KREW_VERSION}/krew-linux_${ARCH}.tar.gz" && \
+    tar zxvf krew-linux_${ARCH}.tar.gz && \
+    ./krew-linux_${ARCH} install krew && \
+    echo 'export PATH=/root/.krew/bin:$PATH' >> ~/.bashrc && \
+    rm krew-linux_${ARCH}.tar.gz
 
 WORKDIR /apps

@@ -36,7 +36,7 @@ build() {
   echo "kubeseal version is $kubeseal_version"
 
   # kubeseal latest
-  krew_version=$(curl -s https://api.github.com/repos/kubernetes-sigs/krew/releases/releases | jq -r '.[].tag_name | select(startswith("v"))' \
+  krew_version=$(curl -s https://api.github.com/repos/kubernetes-sigs/krew/releases | jq -r '.[].tag_name | select(startswith("v"))' \
     | sort -rV | head -n 1 |sed 's/v//')
   echo "krew version is $krew_version"
 

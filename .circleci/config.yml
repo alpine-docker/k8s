@@ -23,10 +23,13 @@ jobs:
       - checkout
       - setup_remote_docker:
           version: 18.09.3
-      - run: |
-          apk --no-cache --update add bash curl sudo
-          echo $REBUILD
-          bash ./build.sh
+      - run:
+          name: Run Build
+          no_output_timeout: 30m
+          command: |
+            apk --no-cache --update add bash curl sudo
+            echo $REBUILD
+            bash ./build.sh
 
 workflows:
   build:

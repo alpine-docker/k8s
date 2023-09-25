@@ -35,11 +35,17 @@ build() {
     | sort -rV | head -n 1 |sed 's/v//')
   echo "kubeseal version is $kubeseal_version"
 
+  # kubeseal latest
+  krew_version=$(curl -s https://api.github.com/repos/kubernetes-sigs/krew/releases/releases | jq -r '.[].tag_name | select(startswith("v"))' \
+    | sort -rV | head -n 1 |sed 's/v//')
+  echo "krew version is $krew_version"
+
   docker build --no-cache \
     --build-arg KUBECTL_VERSION=${tag} \
     --build-arg HELM_VERSION=${helm} \
     --build-arg KUSTOMIZE_VERSION=${kustomize_version} \
     --build-arg KUBESEAL_VERSION=${kubeseal_version} \
+    --build-arg KREW_VERSION=${krew_version} \
     -t ${image}:${tag} .
 
   # run test

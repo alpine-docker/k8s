@@ -70,6 +70,7 @@ build() {
       --build-arg HELM_VERSION=${helm} \
       --build-arg KUSTOMIZE_VERSION=${kustomize_version} \
       --build-arg KUBESEAL_VERSION=${kubeseal_version} \
+      --build-arg KREW_VERSION=${krew_version} \
       -t ${image}:${tag} .
   fi
 }

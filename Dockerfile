@@ -89,7 +89,7 @@ RUN . /envfile && echo $ARCH && \
 
 # Install krew (latest release)
 RUN . /envfile && echo $ARCH && \
-    curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/download/${KREW_VERSION}/krew-linux_${ARCH}.tar.gz" && \
+    curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/download/v${KREW_VERSION}/krew-linux_${ARCH}.tar.gz" && \
     tar zxvf krew-linux_${ARCH}.tar.gz && \
     ./krew-linux_${ARCH} install krew && \
     echo 'export PATH=/root/.krew/bin:$PATH' >> ~/.bashrc && \

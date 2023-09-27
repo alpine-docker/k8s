@@ -61,6 +61,14 @@ bash ./build.sh
 
 Second thinking, if you are adding a new tool, make sure it is supported in both `linux/amd64,linux/arm64` platforms
 
+### Notes for krew usage
+
+You need execute `source ~/.bashrc` before execute krew
+```
+$(DOCKER_CMD) bash -c "source ~/.bashrc" && kubectl krew update
+$(DOCKER_CMD) bash -c "source ~/.bashrc" && kubectl krew install modify-secret ns grep
+```
+
 ### Weekly build
 
 Automation build job runs weekly by Circle CI Pipeline.

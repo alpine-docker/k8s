@@ -34,7 +34,6 @@ jobs:
   scan:
     docker:
       - image: alpine/trivy
-      APPLICATIONS: k8s
     steps:
       - checkout
       - run: |

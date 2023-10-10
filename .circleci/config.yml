@@ -39,7 +39,7 @@ jobs:
       - run: |
           apk add bash
           latest_versions=$(bash ./latest_versions.sh)
-          for tag in ${latest_version}
+          for tag in ${latest_versions}
           do
             echo "Scan image alpine/k8s:${tag} ..."
             trivy image -s "HIGH,CRITICAL" alpine/k8s:${tag}

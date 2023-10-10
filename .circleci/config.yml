@@ -34,15 +34,16 @@ jobs:
   scan:
     docker:
       - image: alpine/trivy
-    environment:
       APPLICATIONS: k8s
     steps:
       - checkout
       - run: |
-          for app in ${APPLICATIONS}
+          apk add bash
+          latest_versions=$(bash ./latest_versions.sh)
+          for tag in ${latest_version}
           do
-            echo "Scan image alpine/${app} ..."
-            trivy image -s "HIGH,CRITICAL" alpine/${app}
+            echo "Scan image alpine/k8s:${tag} ..."
+            trivy image -s "HIGH,CRITICAL" alpine/k8s:${tag}
             echo "==== End of Scan ===="
           done
 

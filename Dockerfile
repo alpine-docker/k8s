@@ -65,7 +65,7 @@ RUN . /envfile && echo $ARCH && \
 # Install awscli
 RUN apk add --update --no-cache python3 && \
     python3 -m ensurepip && \
-    pip3 install --upgrade pip && \
+    pip3 install --upgrade pip setuptools && \
     pip3 install awscli && \
     pip3 cache purge
 

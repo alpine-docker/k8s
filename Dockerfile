@@ -10,8 +10,6 @@ ARG KUSTOMIZE_VERSION=v3.8.1
 ARG KUBESEAL_VERSION=0.18.1
 ARG KREW_VERSION=v0.4.4
 ARG VALS_VERSION=0.28.1
-vals_0.28.1_darwin_amd64.tar.gz
-
 
 # Install helm (latest release)
 # ENV BASE_URL="https://storage.googleapis.com/kubernetes-helm"

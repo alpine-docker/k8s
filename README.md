@@ -27,6 +27,7 @@ kubernetes docker images with necessary tools
 - [awscli v1](https://github.com/aws/aws-cli) (latest version when run the build)
 - [kubeseal](https://github.com/bitnami-labs/sealed-secrets) (latest version when run the build)
 - [krew](https://github.com/kubernetes-sigs/krew) (latest version when run the build)
+- [vals](https://github.com/helmfile/vals) (latest version when run the build)
 - General tools, such as bash, curl, jq, yq, etc
 
 ### Github Repo

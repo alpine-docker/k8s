@@ -28,6 +28,7 @@ kubernetes docker images with necessary tools
 - [kubeseal](https://github.com/bitnami-labs/sealed-secrets) (latest version when run the build)
 - [krew](https://github.com/kubernetes-sigs/krew) (latest version when run the build)
 - [vals](https://github.com/helmfile/vals) (latest version when run the build)
+- [kubeconform](https://github.com/yannh/kubeconform) (latest version when run the build)
 - General tools, such as bash, curl, jq, yq, etc
 
 ### Github Repo

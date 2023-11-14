@@ -10,6 +10,7 @@ ARG KUSTOMIZE_VERSION=v3.8.1
 ARG KUBESEAL_VERSION=0.18.1
 ARG KREW_VERSION=v0.4.4
 ARG VALS_VERSION=0.28.1
+ARG KUBECONFORM_VERSION=0.6.3
 
 # Install helm (latest release)
 # ENV BASE_URL="https://storage.googleapis.com/kubernetes-helm"
@@ -100,5 +101,10 @@ RUN . /envfile && echo $ARCH && \
     ./krew-linux_${ARCH} install krew && \
     echo 'export PATH=/root/.krew/bin:$PATH' >> ~/.bashrc && \
     rm krew-linux_${ARCH}.tar.gz
+
+# Install kubeconform
+RUN . /envfile && echo $ARCH && \
+    curl -L https://github.com/yannh/kubeconform/releases/download/v${KUBECONFORM_VERSION}/kubeconform-linux-${ARCH}.tar.gz -o - | tar xz -C /usr/bin/ && \
+    chmod +x /usr/bin/kubeconform
 
 WORKDIR /apps

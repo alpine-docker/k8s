@@ -45,6 +45,11 @@ build() {
     | sort -rV | head -n 1 |sed 's/v//')
   echo "vals version is $vals_version"
 
+  # kubeconform latest
+  kubeconform_version=$(curl -s https://api.github.com/repos/yannh/kubeconform/releases | jq -r '.[].tag_name | select(startswith("v"))' \
+    | sort -rV | head -n 1 |sed 's/v//')
+  echo "kubeconform version is $kubeconform_version"
+
   docker build --no-cache \
     --build-arg KUBECTL_VERSION=${tag} \
     --build-arg HELM_VERSION=${helm} \
@@ -52,6 +57,7 @@ build() {
     --build-arg KUBESEAL_VERSION=${kubeseal_version} \
     --build-arg KREW_VERSION=${krew_version} \
     --build-arg VALS_VERSION=${vals_version} \
+    --build-arg KUBECONFORM_VERSION=${kubeconform_version} \
     -t ${image}:${tag} .
 
   # run test
@@ -78,6 +84,7 @@ build() {
       --build-arg KUBESEAL_VERSION=${kubeseal_version} \
       --build-arg KREW_VERSION=${krew_version} \
       --build-arg VALS_VERSION=${vals_version} \
+      --build-arg KUBECONFORM_VERSION=${kubeconform_version} \
       -t ${image}:${tag} .
   fi
 }

@@ -65,10 +65,11 @@ RUN . /envfile && echo $ARCH && \
     chmod +x /usr/bin/eksctl
 
 # Install awscli
-RUN apk add --update --no-cache python3 && \
-    python3 -m ensurepip && \
-    pip3 install --upgrade pip setuptools && \
-    pip3 install awscli && \
+# Temp fix to allow system-wide package installation:
+# https://stackoverflow.com/a/76540031/3671801
+RUN apk add --update --no-cache py3-pip && \
+    pip3 install --break-system-packages --upgrade pip setuptools && \
+    pip3 install --break-system-packages awscli && \
     pip3 cache purge
 
 # Install jq

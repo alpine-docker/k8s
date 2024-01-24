@@ -3,17 +3,15 @@ FROM alpine:edge
 # variable "VERSION" must be passed as docker environment variables during the image build
 # docker build --no-cache --build-arg VERSION=2.12.0 -t alpine/helm:2.12.0 .
 
-ARG HELM_VERSION=3.9.3
-ARG KUBECTL_VERSION=1.23.17
-ARG AWS_IAM_AUTH_VERSION=0.6.2
+ARG HELM_VERSION=3.12.3
+ARG KUBECTL_VERSION=1.26.12
+ARG AWS_IAM_AUTH_VERSION=0.6.12
 ARG CRANE_VERSION=0.11.0
 
 ENV AWS_DEFAULT_REGION=eu-west-1
 
 # Install basic tools
-RUN apk add --update --no-cache py3-pip git curl ca-certificates bash && \
-    pip3 install --upgrade pip && \
-    pip3 install awscli
+RUN apk add --update --no-cache git curl ca-certificates bash aws-cli
 
 # Install helm (latest release)
 # ENV BASE_URL="https://storage.googleapis.com/kubernetes-helm"

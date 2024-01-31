@@ -5,10 +5,11 @@ ARG ARCH
 # Ignore to update versions here
 # docker build --no-cache --build-arg KUBECTL_VERSION=${tag} --build-arg HELM_VERSION=${helm} --build-arg KUSTOMIZE_VERSION=${kustomize_version} -t ${image}:${tag} .
 ARG HELM_VERSION=3.2.1
+ARG HELMFILE_VERSION=0.161.0
 ARG KUBECTL_VERSION=1.17.5
 ARG KUSTOMIZE_VERSION=v3.8.1
 ARG KUBESEAL_VERSION=0.18.1
-ARG KREW_VERSION=v0.4.4
+ARG KREW_VERSION=0.4.4
 ARG VALS_VERSION=0.28.1
 ARG KUBECONFORM_VERSION=0.6.3
 
@@ -43,6 +44,12 @@ RUN helm plugin install https://github.com/chartmuseum/helm-push && \
     rm -rf /tmp/helm-* \
     /root/.local/share/helm/plugins/helm-push/testdata \
     /root/.cache/helm/plugins/https-github.com-chartmuseum-helm-push/testdata
+
+# Install kubectl
+RUN . /envfile && echo $ARCH && \
+    curl -sL "https://github.com/helmfile/helmfile/releases/download/v${HELMFILE_VERSION}/helmfile_${HELMFILE_VERSION}_$(uname -s)_${ARCH}.tar.gz" | tar xz -C /tmp && \
+    mv /tmp/helmfile /usr/bin && \
+    chmod +x /usr/bin/helmfile
 
 # Install kubectl
 RUN . /envfile && echo $ARCH && \

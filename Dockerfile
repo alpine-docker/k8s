@@ -45,7 +45,7 @@ RUN helm plugin install https://github.com/chartmuseum/helm-push && \
     /root/.local/share/helm/plugins/helm-push/testdata \
     /root/.cache/helm/plugins/https-github.com-chartmuseum-helm-push/testdata
 
-# Install kubectl
+# Install helmfile
 RUN . /envfile && echo $ARCH && \
     curl -sL "https://github.com/helmfile/helmfile/releases/download/v${HELMFILE_VERSION}/helmfile_${HELMFILE_VERSION}_$(uname -s)_${ARCH}.tar.gz" | tar xz -C /tmp && \
     mv /tmp/helmfile /usr/bin && \

@@ -1,4 +1,4 @@
-FROM alpine/k8s:1.26.13
+FROM alpine/k8s:1.29.6
 
 ARG CRANE_VERSION=0.11.0
 

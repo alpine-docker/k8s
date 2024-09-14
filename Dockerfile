@@ -46,7 +46,7 @@ RUN helm plugin install https://github.com/chartmuseum/helm-push && \
 
 # Install kubectl
 RUN . /envfile && echo $ARCH && \
-    curl -sLO https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/${ARCH}/kubectl && \
+    curl -sLO "https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/${ARCH}/kubectl" && \
     mv kubectl /usr/bin/kubectl && \
     chmod +x /usr/bin/kubectl
 

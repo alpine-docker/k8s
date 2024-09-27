@@ -19,6 +19,7 @@ kubernetes docker images with necessary tools
 - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) (latest minor versions: https://kubernetes.io/releases/)
 - [kustomize](https://github.com/kubernetes-sigs/kustomize) (latest release: https://github.com/kubernetes-sigs/kustomize/releases/latest)
 - [helm](https://github.com/helm/helm) (latest release: https://github.com/helm/helm/releases/latest)
+- [Helmfile](https://github.com/helmfile/helmfile) (latest release: https://github.com/helmfile/helmfile/releases/latest)
 - [helm-diff](https://github.com/databus23/helm-diff) (latest commit)
 - [helm-unittest](https://github.com/helm-unittest/helm-unittest) (latest commit)
 - [helm-push](https://github.com/chartmuseum/helm-push) (latest commit)

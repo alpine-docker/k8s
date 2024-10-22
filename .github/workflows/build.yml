@@ -58,7 +58,7 @@ jobs:
           
           echo ${TARGETS[@]}
           # Convert to JSON array for matrix
-          echo "versions=$(./jq -cn --argjson environments "${TARGETS[@]}" '{target: $environments}')" >> $GITHUB_OUTPUT
+          echo "versions=$(./jq -cn --arg environments "${TARGETS[@]}" '{target: $environments}')" >> $GITHUB_OUTPUT
           echo $GITHUB_OUTPUT
   build:
     runs-on: ubuntu-latest

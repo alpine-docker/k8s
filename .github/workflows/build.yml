@@ -56,7 +56,7 @@ jobs:
             latest_versions=($latest_version)
           done
           
-          echo ${last_versions[@]}
+          echo ${latest_versions[@]}
           # Convert to JSON array for matrix
           TARGETS=$(echo ${latest_versions[@]})
           echo "versions=$(./jq -cn --arg environments "${TARGETS}" '{target: $environments}')" >> $GITHUB_OUTPUT

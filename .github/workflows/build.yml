@@ -53,12 +53,13 @@ jobs:
           for i in $(seq 0 3); do
             minor_version="${sorted_minor_versions[$i]}"
             latest_version=$(echo "$releases" | grep "^$minor_version\." | sort -rV | head -1 | sed 's/v//')
-            TARGETS+=($latest_version)
+            latest_versions=($latest_version)
           done
           
-          echo ${TARGETS[@]}
+          echo ${last_versions[@]}
           # Convert to JSON array for matrix
-          echo "versions=$(./jq -cn --arg environments "${TARGETS[@]}" '{target: $environments}')" >> $GITHUB_OUTPUT
+          TARGETS=$(echo ${latest_versions[@]})
+          echo "versions=$(./jq -cn --arg environments "${TARGETS}" '{target: $environments}')" >> $GITHUB_OUTPUT
           echo $GITHUB_OUTPUT
   build:
     runs-on: ubuntu-latest

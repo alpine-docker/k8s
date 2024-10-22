@@ -55,11 +55,11 @@ jobs:
             latest_version=$(echo "$releases" | grep "^$minor_version\." | sort -rV | head -1 | sed 's/v//')
             latest_versions+=($latest_version)
           done
-          
+
           echo ${latest_versions[@]}
           # Convert to JSON array for matrix
-          TARGETS=${latest_versions[@]}
-          echo "versions=$(./jq -cn --argjson environments "$TARGETS" '{target: $environments}')" >> $GITHUB_OUTPUT
+          TARGETS=$(echo ${latest_versions[@]})
+          echo "versions=$(./jq -cn --arg environments "$TARGETS" '{target: $environments}')" >> $GITHUB_OUTPUT
           echo $GITHUB_OUTPUT
   build:
     runs-on: ubuntu-latest
@@ -68,7 +68,7 @@ jobs:
       pull-requests: write
     strategy:
         matrix:
-         versions: ${{ fromJson(needs.get-kubectl-versions.outputs.versions) }}  
+         versions: ${{ fromJson(needs.get-kubectl-versions.outputs.versions) }}
     steps:
       - name: Setup Docker buildx
         uses: docker/setup-buildx-action@v3

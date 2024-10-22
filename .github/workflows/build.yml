@@ -1,0 +1,180 @@
+name: Docker
+
+on:
+  push:
+    tags: ["*"]
+    branches:
+      - "main"
+      - "master"
+  schedule:
+    - cron: '0 5 * * 0'
+  pull_request:
+    branches: ["**"]
+
+env:
+  # Hostname of your registry
+  REGISTRY: docker.io
+  # Image repository, without hostname and tag
+  IMAGE_NAME: alpine/k8s
+  SHA: ${{ github.event.pull_request.head.sha || github.event.after }}
+
+jobs:
+  get-kubectl-versions:
+    runs-on: ubuntu-latest
+    outputs:
+      versions: ${{ steps.set-versions.outputs.versions }}
+    steps:
+      - name: Get versions
+        id: set-versions
+        run: |
+          # Get the list of all releases tags, excludes alpha, beta, rc tags
+          releases=$(curl -s https://api.github.com/repos/kubernetes/kubernetes/releases | jq -r '.[].tag_name | select(test("alpha|beta|rc") | not)')
+        
+          # Loop through the releases and extract the minor version number
+          for release in $releases; do
+            minor_version=$(echo $release | awk -F'.' '{print $1"."$2}')
+            
+            # Check if the minor version is already in the array of minor versions
+            if [[ ! " ${minor_versions[@]} " =~ " ${minor_version} " ]]; then
+              minor_versions+=($minor_version)
+            fi
+          done
+        
+          # Sort the unique minor versions in reverse order
+          sorted_minor_versions=($(echo "${minor_versions[@]}" | tr ' ' '\n' | sort -rV))
+        
+          # Loop through the first 4 unique minor versions and get the latest version for each
+          for i in $(seq 0 3); do
+            minor_version="${sorted_minor_versions[$i]}"
+            latest_version=$(echo "$releases" | grep "^$minor_version\." | sort -rV | head -1 | sed 's/v//')
+            latest_versions+=($latest_version)
+          done
+          
+          echo $latest_versions
+          # Convert to JSON array for matrix
+          echo "versions=$(echo $latest_vesions | jq -R 'split(" ")' -c)" >> $GITHUB_OUTPUT
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+
+    strategy:
+        matrix:
+          version: ${{ fromJson(needs.get-kubectl-versions.outputs.versions) }}
+    steps:
+      - name: Setup Docker buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Step to fetch the latest curl version
+      - name: Get latest curl version
+        id: curl-version
+        run: |
+          # export CURL_OPTIONS="-sL -H \"Authorization: token ${{ secrets.API_KEY }}\""
+
+          curl -H "Cache-Control: no-cache" -sL "https://raw.githubusercontent.com/alpine-docker/multi-arch-docker-images/stable/functions.sh" -o functions.sh
+          #curl -H "Cache-Control: no-cache" -sL "https://raw.githubusercontent.com/alpine-docker/multi-arch-docker-images/refs/heads/master/functions.sh" -o functions.sh 
+          source functions.sh
+
+          # helm latest, hold the release candidates
+          helm=$(curl -s https://api.github.com/repos/helm/helm/releases | jq -r '.[].tag_name | select([startswith("v"), (contains("-rc") | not)] | all)' \
+            | sort -rV | head -n 1 |sed 's/v//')
+          echo "helm version is $helm"
+          echo "HELM_VERSION=$helm" >> $GITHUB_ENV
+
+          # kustomize latest
+          kustomize_release=$(curl -s https://api.github.com/repos/kubernetes-sigs/kustomize/releases | jq -r '.[].tag_name | select(contains("kustomize"))' \
+            | sort -rV | head -n 1)
+          kustomize_version=$(basename ${kustomize_release})
+          echo "kustomize version is $kustomize_version"
+          echo "KUSTOMIZE_VERSION=$kustomize_version" >> $GITHUB_ENV
+
+          # kubeseal latest
+          kubeseal_version=$(curl -s https://api.github.com/repos/bitnami-labs/sealed-secrets/releases | jq -r '.[].tag_name | select(startswith("v"))' \
+            | sort -rV | head -n 1 |sed 's/v//')
+          echo "kubeseal version is $kubeseal_version"
+          echo "KUBESEAL_VERSION=$kubeseal_version" >> $GITHUB_ENV
+
+          # krew latest
+          krew_version=$(curl -s https://api.github.com/repos/kubernetes-sigs/krew/releases | jq -r '.[].tag_name | select(startswith("v"))' \
+            | sort -rV | head -n 1 |sed 's/v//')
+          echo "krew version is $krew_version"
+          echo "KREW_VERSION=$krew_version" >> $GITHUB_ENV
+
+          # vals latest
+          vals_version=$(curl -s https://api.github.com/repos/helmfile/vals/releases | jq -r '.[].tag_name | select(startswith("v"))' \
+            | sort -rV | head -n 1 |sed 's/v//')
+          echo "vals version is $vals_version"
+          echo "VALS_VERSION=$vals_version" >> $GITHUB_ENV
+
+          # kubeconform latest
+          kubeconform_version=$(curl -s https://api.github.com/repos/yannh/kubeconform/releases | jq -r '.[].tag_name | select(startswith("v"))' \
+            | sort -rV | head -n 1 |sed 's/v//')
+          echo "kubeconform version is $kubeconform_version"
+          echo "KUBECONFORM_VERSION=$kubeconform_version" >> $GITHUB_ENV
+
+      # Authenticate to the container registry
+      - name: Authenticate to registry ${{ env.REGISTRY }}
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Extract metadata (tags, labels) for Docker
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          labels: |
+            org.opencontainers.image.revision=${{ env.SHA }}
+          tags: |
+            type=edge,branch=$repo.default_branch
+            type=semver,pattern=v{{version}}
+            type=sha,prefix=,suffix=,format=short
+
+      # Build and push Docker image with Buildx
+      # (don't push on PR, load instead)
+      - name: Build and push Docker image
+        id: build-and-push
+        uses: docker/build-push-action@v6
+        with:
+          platforms: linux/amd64,linux/arm64
+          sbom: ${{ github.event_name != 'pull_request' }}
+          provenance: ${{ github.event_name != 'pull_request' }}
+          push: ${{ github.event_name != 'pull_request' }}
+          load: ${{ github.event_name == 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            HELM_VERSION=${{ env.HELM_VERSION }}
+            KUBECTL_VERSION=${{ matrix.version }}
+            KUSTOMIZE_VERSION=${{ env.KUSTOMIZE_VERSION }}
+            KUBESEAL_VERSION=${{ env.KUBESEAL_VERSION }}
+            KREW_VERSION=${{ env.KREW_VERSION }}
+            VALS_VERSION=${{ env.VALS_VERSION }}
+            KUBECONFORM_VERSION=${{ env.KUBECONFORM_VERSION }}
+
+      # - name: Checkout code
+      #   uses: actions/checkout@v2
+
+      # - name: check the platform in multi-arch images
+      #   run: |
+      #     echo ${{ steps.meta.outputs.tags }}
+      #     bash ./test.sh ${{ steps.meta.outputs.tags }}
+
+      #- name: set tags
+      #  run: |
+      #    # install crane
+      #    curl -LO https://github.com/google/go-containerregistry/releases/download/v0.20.2/go-containerregistry_Linux_x86_64.tar.gz
+      #    tar zxvf go-containerregistry_Linux_x86_64.tar.gz
+      #    chmod +x crane
+
+      #    export VERSION=($(docker run -i --rm ${{ steps.meta.outputs.tags }} curl --version|awk '$1=$1' |awk -F "[ -]" 'NR==1{print $2}'))
+      #    echo $VERSION
+      #    ./crane auth login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }} index.docker.io
+      #    ./crane copy ${{ steps.meta.outputs.tags }} ${{ env.IMAGE_NAME }}:latest
+      #    ./crane copy ${{ steps.meta.outputs.tags }} ${{ env.IMAGE_NAME }}:${VERSION}
+      #    rm -f /home/runner/.docker/config.json

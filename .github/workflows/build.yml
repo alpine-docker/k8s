@@ -27,7 +27,6 @@ jobs:
       - name: Get versions
         id: set-versions
         run: |
-          set -x
           # Get the list of all releases tags, excludes alpha, beta, rc tags
           releases=$(curl -s https://api.github.com/repos/kubernetes/kubernetes/releases | jq -r '.[].tag_name | select(test("alpha|beta|rc") | not)')
         
@@ -53,15 +52,14 @@ jobs:
           
           echo ${latest_versions[@]}
           # Convert to JSON array for matrix
-          echo "versions=$(echo ${latest_versions[@]})" >> $GITHUB_OUTPUT
+          echo "versions=$(echo ${latest_versions[@]})" >> $GITHUB_ENV
   build:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
-
     strategy:
         matrix:
-          version: ${{ fromJson(needs.get-kubectl-versions.outputs.versions) }}
+          version: ${{ env.versions }}
     steps:
       - name: Setup Docker buildx
         uses: docker/setup-buildx-action@v3

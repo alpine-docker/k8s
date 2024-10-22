@@ -52,14 +52,14 @@ jobs:
           
           echo ${latest_versions[@]}
           # Convert to JSON array for matrix
-          echo "versions=$(echo ${latest_versions[@]})" >> $GITHUB_ENV
+          echo "versions=$(echo ${latest_versions[@]})" >> $GITHUB_OUTPUT
   build:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
     strategy:
         matrix:
-          version: ${{ env.versions }}
+          version: ${{ fromJson(needs.get-kubectl-versions.outputs.versions) }}
     steps:
       - name: Setup Docker buildx
         uses: docker/setup-buildx-action@v3

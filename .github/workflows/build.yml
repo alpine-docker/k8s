@@ -53,7 +53,7 @@ jobs:
           
           echo ${latest_versions[@]}
           # Convert to JSON array for matrix
-          echo "versions=$(echo ${latest_versions[@]} | jq -R 'split(" ")' -c)" >> $GITHUB_OUTPUT
+          echo "versions=$(echo ${latest_versions[@]})" >> $GITHUB_OUTPUT
   build:
     runs-on: ubuntu-latest
     permissions:

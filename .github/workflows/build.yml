@@ -27,6 +27,12 @@ jobs:
       - name: Get versions
         id: set-versions
         run: |
+          # jq 1.6
+          DEBIAN_FRONTEND=noninteractive
+          #sudo apt-get update && sudo apt-get -q -y install jq
+          curl -sL https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 -o jq
+          chmod +x jq
+
           # Get the list of all releases tags, excludes alpha, beta, rc tags
           releases=$(curl -s https://api.github.com/repos/kubernetes/kubernetes/releases | jq -r '.[].tag_name | select(test("alpha|beta|rc") | not)')
         
@@ -53,7 +59,7 @@ jobs:
           echo ${latest_versions[@]}
           # Convert to JSON array for matrix
           TARGETS=$(echo ${latest_versions[@]})
-          echo "versions=$(jq -cn --argjson environments "$TARGETS" '{target: $environments}')" >> $GITHUB_OUTPUT
+          echo "versions=$(./jq -cn --argjson environments "$TARGETS" '{target: $environments}')" >> $GITHUB_OUTPUT
           echo $GITHUB_OUTPUT
   build:
     runs-on: ubuntu-latest

@@ -64,13 +64,16 @@ RUN . /envfile && echo $ARCH && \
     mv /tmp/eksctl /usr/bin && \
     chmod +x /usr/bin/eksctl
 
-# Install awscli
-# Temp fix to allow system-wide package installation:
-# https://stackoverflow.com/a/76540031/3671801
-RUN apk add --update --no-cache py3-pip && \
-    pip3 install --break-system-packages --upgrade pip setuptools && \
-    pip3 install --break-system-packages awscli && \
-    pip3 cache purge
+# Install awscli v1
+RUN apk add --update --no-cache pipx && \
+    pipx install awscli --global --suffix=v1
+
+# Install awscli v2
+RUN apk add --update --no-cache aws-cli && \
+    mv /usr/bin/aws /usr/local/bin/awsv2
+
+# Add script to switch between aws cli v1 and v2
+COPY aws_cli.sh /usr/local/bin/aws
 
 # Install jq
 RUN apk add --update --no-cache jq yq

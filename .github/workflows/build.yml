@@ -1,0 +1,122 @@
+name: Build Kubernetes Tools Image
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Run daily at midnight
+  workflow_dispatch:      # Allow manual trigger
+  push:
+    branches:
+      - main
+      - master
+
+env:
+  DOCKER_IMAGE: alpine/k8s
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for versioning
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Install jq
+        run: |
+          curl -sL https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 -o jq
+          sudo mv jq /usr/bin/jq
+          sudo chmod +x /usr/bin/jq
+
+      - name: Get latest versions
+        id: versions
+        run: |
+          # Get the list of all releases tags, excludes alpha, beta, rc tags
+          releases=$(curl -s https://api.github.com/repos/kubernetes/kubernetes/releases | jq -r '.[].tag_name | select(test("alpha|beta|rc") | not)')
+          
+          # Get unique minor versions
+          minor_versions=()
+          for release in $releases; do
+            minor_version=$(echo $release | awk -F'.' '{print $1"."$2}')
+            if [[ ! " ${minor_versions[@]} " =~ " ${minor_version} " ]]; then
+              minor_versions+=($minor_version)
+            fi
+          done
+          
+          # Sort and get latest 4 versions
+          sorted_minor_versions=($(echo "${minor_versions[@]}" | tr ' ' '\n' | sort -rV))
+          latest_versions=()
+          for i in $(seq 0 3); do
+            minor_version="${sorted_minor_versions[$i]}"
+            latest_version=$(echo "$releases" | grep "^$minor_version\." | sort -rV | head -1 | sed 's/v//')
+            latest_versions+=($latest_version)
+          done
+          
+          echo "versions=${latest_versions[*]}" >> $GITHUB_OUTPUT
+
+      - name: Configure Git
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'github-actions@github.com'
+
+      - name: Build and push images
+        id: build
+        run: |
+          for tag in ${{ steps.versions.outputs.versions }}; do
+            echo "Building for version: $tag"
+            
+            # Get latest versions of other tools
+            helm=$(curl -s https://api.github.com/repos/helm/helm/releases | jq -r '.[].tag_name | select([startswith("v"), (contains("-rc") | not)] | all)' | sort -rV | head -n 1 | sed 's/v//')
+            kustomize_release=$(curl -s https://api.github.com/repos/kubernetes-sigs/kustomize/releases | jq -r '.[].tag_name | select(contains("kustomize"))' | sort -rV | head -n 1)
+            kustomize_version=$(basename ${kustomize_release})
+            kubeseal_version=$(curl -s https://api.github.com/repos/bitnami-labs/sealed-secrets/releases | jq -r '.[].tag_name | select(startswith("v"))' | sort -rV | head -n 1 | sed 's/v//')
+            krew_version=$(curl -s https://api.github.com/repos/kubernetes-sigs/krew/releases | jq -r '.[].tag_name | select(startswith("v"))' | sort -rV | head -n 1 | sed 's/v//')
+            vals_version=$(curl -s https://api.github.com/repos/helmfile/vals/releases | jq -r '.[].tag_name | select(startswith("v"))' | sort -rV | head -n 1 | sed 's/v//')
+            kubeconform_version=$(curl -s https://api.github.com/repos/yannh/kubeconform/releases | jq -r '.[].tag_name | select(startswith("v"))' | sort -rV | head -n 1 | sed 's/v//')
+            
+            # Build and push multi-arch image
+            docker buildx build --push \
+              --platform=linux/amd64,linux/arm64 \
+              --build-arg KUBECTL_VERSION=${tag} \
+              --build-arg HELM_VERSION=${helm} \
+              --build-arg KUSTOMIZE_VERSION=${kustomize_version} \
+              --build-arg KUBESEAL_VERSION=${kubeseal_version} \
+              --build-arg KREW_VERSION=${krew_version} \
+              --build-arg VALS_VERSION=${vals_version} \
+              --build-arg KUBECONFORM_VERSION=${kubeconform_version} \
+              -t ${{ env.DOCKER_IMAGE }}:${tag} .
+
+            # Create version file
+            echo "Kubernetes: v${tag}" > versions.txt
+            echo "Helm: v${helm}" >> versions.txt
+            echo "Kustomize: ${kustomize_version}" >> versions.txt
+            echo "Kubeseal: v${kubeseal_version}" >> versions.txt
+            echo "Krew: v${krew_version}" >> versions.txt
+            echo "Vals: v${vals_version}" >> versions.txt
+            echo "Kubeconform: v${kubeconform_version}" >> versions.txt
+
+            # Create git tag and release
+            git add versions.txt
+            git commit -m "Update versions for k8s v${tag}"
+            git tag -a "v${tag}" -m "Release for Kubernetes v${tag}"
+            git push origin "v${tag}"
+          done
+
+      - name: Create GitHub Release
+        if: success()
+        uses: softprops/action-gh-release@v1
+        with:
+          files: versions.txt
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 

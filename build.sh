@@ -19,8 +19,8 @@ install_jq() {
 }
 
 build() {
-  # helm latest, hold the release candidates
-  helm=$(curl -s https://api.github.com/repos/helm/helm/releases | jq -r '.[].tag_name | select([startswith("v"), (contains("-rc") | not)] | all)' \
+  # helm latest, hold prereleases
+  helm=$(curl -s https://api.github.com/repos/helm/helm/releases | jq -r '.[].tag_name | select([startswith("v"), (contains("-") | not)] | all)' \
     | sort -rV | head -n 1 |sed 's/v//')
   echo "helm version is $helm"
 

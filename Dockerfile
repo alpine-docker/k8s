@@ -33,14 +33,14 @@ RUN . /envfile && echo $ARCH && \
     rm -rf linux-${ARCH}
 
 # add helm-diff
-RUN helm plugin install https://github.com/databus23/helm-diff && rm -rf /tmp/helm-* && \
+RUN helm plugin install --verify=false https://github.com/databus23/helm-diff && rm -rf /tmp/helm-* && \
     rm -rf ~/.cache/helm/plugins/https-github.com-databus23-helm-diff/.git
 
 # add helm-unittest
-RUN helm plugin install https://github.com/helm-unittest/helm-unittest && rm -rf /tmp/helm-*
+RUN helm plugin install --verify=false https://github.com/helm-unittest/helm-unittest && rm -rf /tmp/helm-*
 
 # add helm-push
-RUN helm plugin install https://github.com/chartmuseum/helm-push && \
+RUN helm plugin install --verify=false https://github.com/chartmuseum/helm-push && \
     rm -rf /tmp/helm-* \
     /root/.local/share/helm/plugins/helm-push/testdata \
     /root/.cache/helm/plugins/https-github.com-chartmuseum-helm-push/testdata

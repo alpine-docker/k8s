@@ -39,12 +39,6 @@ RUN helm plugin install --verify=false https://github.com/databus23/helm-diff &&
 # add helm-unittest
 RUN helm plugin install --verify=false https://github.com/helm-unittest/helm-unittest && rm -rf /tmp/helm-*
 
-# add helm-push
-RUN helm plugin install --verify=false https://github.com/chartmuseum/helm-push && \
-    rm -rf /tmp/helm-* \
-    /root/.local/share/helm/plugins/helm-push/testdata \
-    /root/.cache/helm/plugins/https-github.com-chartmuseum-helm-push/testdata
-
 # Install kubectl
 RUN . /envfile && echo $ARCH && \
     curl -sLO "https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/${ARCH}/kubectl" && \

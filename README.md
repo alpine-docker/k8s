@@ -24,6 +24,8 @@ kubernetes docker images with necessary tools
 - [aws-iam-authenticator](https://github.com/kubernetes-sigs/aws-iam-authenticator) (latest version when run the build)
 - [eksctl](https://github.com/weaveworks/eksctl) (latest version when run the build)
 - [awscli v1](https://github.com/aws/aws-cli) (latest version when run the build)
+- [awscli v2](https://github.com/aws/aws-cli/tree/v2) (latest version when run the build)
+    - To use awscli v2, set the env var `AWS_CLI=v2`: `docker run --rm -e AWS_CLI=v2 alpine/k8s aws --version`
 - [kubeseal](https://github.com/bitnami-labs/sealed-secrets) (latest version when run the build)
 - [krew](https://github.com/kubernetes-sigs/krew) (latest version when run the build)
 - [vals](https://github.com/helmfile/vals) (latest version when run the build)

@@ -82,7 +82,7 @@ RUN apk add --update --no-cache gettext
 
 # Install kubeseal
 RUN . /envfile && echo $ARCH && \
-    curl -L https://github.com/bitnami-labs/sealed-secrets/releases/download/v${KUBESEAL_VERSION}/kubeseal-${KUBESEAL_VERSION}-linux-${ARCH}.tar.gz -o - | tar xz -C /usr/bin/ && \
+    curl -L https://github.com/bitnami/sealed-secrets/releases/download/v${KUBESEAL_VERSION}/kubeseal-${KUBESEAL_VERSION}-linux-${ARCH}.tar.gz -o - | tar xz -C /usr/bin/ && \
     chmod +x /usr/bin/kubeseal
 
 # Install vals

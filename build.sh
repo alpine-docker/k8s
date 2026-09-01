@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Prerequisite
-# Make sure you set secret enviroment variables in CI
+# Make sure you set secret environment variables in CI
 # DOCKER_USERNAME
 # DOCKER_PASSWORD
 
@@ -20,33 +20,33 @@ install_jq() {
 
 build() {
   # helm latest, hold the release candidates
-  helm=$(curl -s https://api.github.com/repos/helm/helm/releases | jq -r '.[].tag_name | select([startswith("v"), (contains("-") | not)] | all)' \
+  helm=$(curl -sL https://api.github.com/repos/helm/helm/releases | jq -r '.[].tag_name | select([startswith("v"), (contains("-") | not)] | all)' \
     | sort -rV | head -n 1 |sed 's/v//')
   echo "helm version is $helm"
 
   # kustomize latest
-  kustomize_release=$(curl -s https://api.github.com/repos/kubernetes-sigs/kustomize/releases | jq -r '.[].tag_name | select(contains("kustomize"))' \
+  kustomize_release=$(curl -sL https://api.github.com/repos/kubernetes-sigs/kustomize/releases | jq -r '.[].tag_name | select(contains("kustomize"))' \
     | sort -rV | head -n 1)
   kustomize_version=$(basename ${kustomize_release})
   echo "kustomize version is $kustomize_version"
 
   # kubeseal latest
-  kubeseal_version=$(curl -s https://api.github.com/repos/bitnami-labs/sealed-secrets/releases | jq -r '.[].tag_name | select(startswith("v"))' \
+  kubeseal_version=$(curl -sL https://api.github.com/repos/bitnami/sealed-secrets/releases | jq -r '.[].tag_name | select(startswith("v"))' \
     | sort -rV | head -n 1 |sed 's/v//')
   echo "kubeseal version is $kubeseal_version"
 
   # krew latest
-  krew_version=$(curl -s https://api.github.com/repos/kubernetes-sigs/krew/releases | jq -r '.[].tag_name | select(startswith("v"))' \
+  krew_version=$(curl -sL https://api.github.com/repos/kubernetes-sigs/krew/releases | jq -r '.[].tag_name | select(startswith("v"))' \
     | sort -rV | head -n 1 |sed 's/v//')
   echo "krew version is $krew_version"
 
   # vals latest
-  vals_version=$(curl -s https://api.github.com/repos/helmfile/vals/releases | jq -r '.[].tag_name | select(startswith("v"))' \
+  vals_version=$(curl -sL https://api.github.com/repos/helmfile/vals/releases | jq -r '.[].tag_name | select(startswith("v"))' \
     | sort -rV | head -n 1 |sed 's/v//')
   echo "vals version is $vals_version"
 
   # kubeconform latest
-  kubeconform_version=$(curl -s https://api.github.com/repos/yannh/kubeconform/releases | jq -r '.[].tag_name | select(startswith("v"))' \
+  kubeconform_version=$(curl -sL https://api.github.com/repos/yannh/kubeconform/releases | jq -r '.[].tag_name | select(startswith("v"))' \
     | sort -rV | head -n 1 |sed 's/v//')
   echo "kubeconform version is $kubeconform_version"
 
@@ -94,12 +94,12 @@ image="alpine/k8s"
 install_jq
 
 # Get the list of all releases tags, excludes alpha, beta, rc tags
-releases=$(curl -s https://api.github.com/repos/kubernetes/kubernetes/releases | jq -r '.[].tag_name | select(test("alpha|beta|rc") | not)')
+releases=$(curl -sL https://api.github.com/repos/kubernetes/kubernetes/releases | jq -r '.[].tag_name | select(test("alpha|beta|rc") | not)')
 
 # Loop through the releases and extract the minor version number
 for release in $releases; do
   minor_version=$(echo $release | awk -F'.' '{print $1"."$2}')
-  
+
   # Check if the minor version is already in the array of minor versions
   if [[ ! " ${minor_versions[@]} " =~ " ${minor_version} " ]]; then
     minor_versions+=($minor_version)

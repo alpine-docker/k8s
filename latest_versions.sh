@@ -3,7 +3,7 @@ image="alpine/k8s"
 # jq 1.6
 DEBIAN_FRONTEND=noninteractive
 #sudo apt-get update && sudo apt-get -q -y install jq
-curl -sL https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 -o jq
+curl -sL https://github.com/jqlang/jq/releases/download/jq-1.6/jq-linux64 -o jq
 mv jq /usr/bin/jq
 chmod +x /usr/bin/jq
 

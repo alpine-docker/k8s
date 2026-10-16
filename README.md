@@ -22,7 +22,7 @@ kubernetes docker images with necessary tools
 - [helm-diff](https://github.com/databus23/helm-diff) (latest commit)
 - [helm-unittest](https://github.com/helm-unittest/helm-unittest) (latest commit)
 - [aws-iam-authenticator](https://github.com/kubernetes-sigs/aws-iam-authenticator) (latest version when run the build)
-- [eksctl](https://github.com/weaveworks/eksctl) (latest version when run the build)
+- [eksctl](https://github.com/eksctl-io/eksctl) (latest version when run the build)
 - [awscli v1](https://github.com/aws/aws-cli) (latest version when run the build)
 - [kubeseal](https://github.com/bitnami/sealed-secrets) (latest version when run the build)
 - [krew](https://github.com/kubernetes-sigs/krew) (latest version when run the build)

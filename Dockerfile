@@ -55,7 +55,7 @@ RUN . /envfile && echo $ARCH && \
 
 # Install eksctl (latest version)
 RUN . /envfile && echo $ARCH && \
-    curl -sL "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_${ARCH}.tar.gz" | tar xz -C /tmp && \
+    curl -sL "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$(uname -s)_${ARCH}.tar.gz" | tar xz -C /tmp && \
     mv /tmp/eksctl /usr/bin && \
     chmod +x /usr/bin/eksctl
 

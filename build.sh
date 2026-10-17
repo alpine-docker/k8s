@@ -85,7 +85,8 @@ build() {
       --build-arg KREW_VERSION=${krew_version} \
       --build-arg VALS_VERSION=${vals_version} \
       --build-arg KUBECONFORM_VERSION=${kubeconform_version} \
-      -t ${image}:${tag} .
+      -t ${image}:${tag} \
+      -t ${image}:${tag%.*} .
   fi
 }
 

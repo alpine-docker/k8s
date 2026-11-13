@@ -53,6 +53,8 @@ Mostly it is used during CI/CD (continuous integration and continuous delivery) 
 
 You should check in [kubernetes versions](https://kubernetes.io/releases/), it lists the kubectl latest minor versions and used as image tags.
 
+Each build also pushes a minor version tag, such as `1.35`, next to the patch tag (`1.35.9`). It always points to the newest patch image built for that minor version, so a chart that derives the image tag from the cluster's `major.minor` version keeps working even when a patch tag was never published.
+
 # Involve with developing and testing
 
 If you want to build these images by yourself, please follow below commands.

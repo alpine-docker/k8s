@@ -45,6 +45,21 @@ https://app.circleci.com/pipelines/github/alpine-docker/k8s
 
 https://hub.docker.com/r/alpine/k8s/tags/
 
+### Verify images
+
+Images pushed by the CircleCI build carry an SBOM and SLSA provenance, and are signed keylessly with [cosign](https://github.com/sigstore/cosign) using CircleCI's OIDC identity.
+
+```
+cosign verify alpine/k8s:<tag> \
+  --certificate-oidc-issuer https://oidc.circleci.com/org/c662fb3e-e5ba-44aa-b81f-09ac042124af \
+  --certificate-identity-regexp '^https://circleci\.com/api/v2/projects/19e10b59-9f87-4067-915a-aed6fa3429df/pipeline-definitions/'
+
+docker buildx imagetools inspect alpine/k8s:<tag> --format '{{ json .SBOM }}'
+docker buildx imagetools inspect alpine/k8s:<tag> --format '{{ json .Provenance }}'
+```
+
+Only images built after signing was added are signed.
+
 # Why we need it
 
 Mostly it is used during CI/CD (continuous integration and continuous delivery) or as part of an automated build/deployment

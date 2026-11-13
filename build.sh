@@ -86,7 +86,12 @@ build() {
       --build-arg KREW_VERSION=${krew_version} \
       --build-arg VALS_VERSION=${vals_version} \
       --build-arg KUBECONFORM_VERSION=${kubeconform_version} \
+      --metadata-file /tmp/buildx-metadata.json \
       -t ${image}:${tag} .
+
+    digest=$(jq -r '."containerimage.digest"' /tmp/buildx-metadata.json)
+    oidc_token=$(circleci run oidc get --claims '{"aud": "sigstore"}')
+    SIGSTORE_ID_TOKEN="${oidc_token}" cosign sign --yes --recursive "${image}@${digest}"
   fi
 }
 

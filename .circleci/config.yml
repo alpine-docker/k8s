@@ -27,7 +27,7 @@ jobs:
           name: Run Build
           no_output_timeout: 30m
           command: |
-            apk --no-cache --update add bash curl sudo
+            apk --no-cache --update add bash curl sudo cosign
             echo $REBUILD
             bash ./build.sh
 

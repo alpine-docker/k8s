@@ -16,7 +16,7 @@ parameters:
 jobs:
   build:
     docker:
-      - image: alpine/docker-with-buildx
+      - image: docker:29-cli
     environment:
       REBUILD: << pipeline.parameters.rebuild >>
     steps:
